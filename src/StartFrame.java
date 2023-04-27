@@ -29,7 +29,7 @@ public class StartFrame extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    // Activeren Simulatie of Monitoring Modus
+    // Opent de simulatie of de monitoring applicatie
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == jbSimulatie) {

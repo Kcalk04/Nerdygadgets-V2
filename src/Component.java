@@ -1,5 +1,5 @@
 import javax.swing.*;
-import java.awt.*;
+import java.io.File;
 
 public class Component {
     private String naam;
@@ -30,15 +30,20 @@ public class Component {
         return type;
     }
 
+    // Geeft de afbeelding terug op basis van het type component (PFSENSE, WEBSERVER, DATABASE)
     public ImageIcon getAfbeelding() {
+
+        // Slaat het root pad van het project op
+        String rootPath = new File("").getAbsolutePath();
+
         if(type == ComponentType.PFSENSE) {
-            return new ImageIcon("src/img/pfsense.jpg");
+            return new ImageIcon(rootPath + "/src/img/pfsense.jpg");
         } else if(type == ComponentType.WEBSERVER) {
-            return new ImageIcon("src/img/webserver.jpg");
+            return new ImageIcon(rootPath + "/src/img/webserver.jpg");
         } else if(type == ComponentType.DATABASESERVER) {
-            return new ImageIcon("src/img/databaseserver.jpg");
+            return new ImageIcon(rootPath + "/src/img/databaseserver.jpg");
         } else {
-            return null;
+            return new ImageIcon(rootPath + "/src/img/placeholder.jpg");
         }
     }
 }
