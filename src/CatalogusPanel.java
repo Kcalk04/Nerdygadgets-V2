@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -79,28 +81,14 @@ public class CatalogusPanel extends Panel {
 
             // MouseListener aan afbeeldingslabel koppelen
             jlAfbeelding.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent e) {
-                    isHighlighted = true;
-                    // Vderander border color wanneer de label gehighlight is
-                    jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-                    jlAfbeelding.setOpaque(true);
-                }
-
-                //
-                public void mouseExited(MouseEvent e) {
-                    // Check of rechtermuisknop geklikt is, dan niet de kleur aanpassen
-                    if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
-                        return;
-                    }
-
-                    // Als de rechtermuisknop niet ingedrukt is en de label is niet geselecteerd, doe normale kleuren
-                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
-                    jlAfbeelding.setOpaque(false);
-                }
-
-                // Als rechtermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
+                // Als linkermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
                 public void mousePressed(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
+                    if (SwingUtilities.isLeftMouseButton(e)) {
+                        isHighlighted = true;
+                        // Verander border color wanneer de label gehighlight is
+                        jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+                        jlAfbeelding.setOpaque(true);
+
                         // Maak de popup menu aan
                         JPopupMenu popupMenu = new JPopupMenu();
                         JMenuItem toevoegen = new JMenuItem("Voeg component toe");
@@ -109,6 +97,16 @@ public class CatalogusPanel extends Panel {
                         // Popup laten zien op de coordinaten van de cursor
                         popupMenu.show(e.getComponent(), e.getX(), e.getY());
                     }
+                }
+                public void mouseExited(MouseEvent e) {
+                    // Check of linkermuisknop geklikt is, dan niet de kleur aanpassen
+                    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+                        return;
+                    }
+
+                    // Als de linkermuisknop niet ingedrukt is, doe normale kleuren
+                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
+                    jlAfbeelding.setOpaque(false);
                 }
             });
         }
