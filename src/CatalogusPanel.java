@@ -1,32 +1,38 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class CatalogusPanel extends Panel {
 
+    public boolean isHighlighted = false;
     private ArrayList<Component> catalogusComponenten;
 
     public CatalogusPanel(ArrayList<Component> componenten) {
         super(componenten);
 
         setBackground(Color.lightGray);
-        setPreferredSize(new Dimension(0,0));
-        setLayout(new GridLayout(5,2));
+        setPreferredSize(new Dimension(0, 0));
+        setLayout(new GridLayout(5, 2));
 
         catalogusComponenten = new ArrayList<>();
 
         // Het initialiseren van de verschillende componenten
-        Component pfsense = new Component("Pfsense", 49.99, 90, ComponentType.PFSENSE);
-        Component apacheServer1 = new Component("Apache", 19.99, 70, ComponentType.WEBSERVER);
-        Component apacheServer2 = new Component("Apache", 29.99, 90, ComponentType.WEBSERVER);
-        Component mySQL1 = new Component("MySQL", 19.99, 70, ComponentType.DATABASESERVER);
-        Component mySQL2 = new Component("MySQL", 22.99, 80, ComponentType.DATABASESERVER);
-        Component mySQL3 = new Component("MySQL", 29.99, 90, ComponentType.DATABASESERVER);
+        Component pfsense = new Component("pfSense firewall", 4000, 90, ComponentType.PFSENSE);
+        Component mySQL1 = new Component("HAL9001DB", 5100, 90, ComponentType.DATABASESERVER);
+        Component mySQL2 = new Component("HAL9002DB", 7700, 95, ComponentType.DATABASESERVER);
+        Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
+        Component apacheServer1 = new Component("HAL9001W", 2200, 80, ComponentType.WEBSERVER);
+        Component apacheServer2 = new Component("HAL9002W", 3200, 90, ComponentType.WEBSERVER);
+        Component apacheServer3 = new Component("HAL9002W", 5100, 95, ComponentType.WEBSERVER);
+
 
         // Het toevoegen van de componenten aan de catelogus
         catalogusComponenten.add(pfsense);
         catalogusComponenten.add(apacheServer1);
         catalogusComponenten.add(apacheServer2);
+        catalogusComponenten.add(apacheServer3);
         catalogusComponenten.add(mySQL1);
         catalogusComponenten.add(mySQL2);
         catalogusComponenten.add(mySQL3);
@@ -34,7 +40,7 @@ public class CatalogusPanel extends Panel {
         tekenCatelogus();
     }
 
-    // Deze functie tekent alle componenten binnen de catelogus
+    // Deze functie tekent alle componenten binnen de catelogus en zorgt ervoor dat rechtermuisknop menu werkt
     private void tekenCatelogus() {
         for(int i = 0; i < catalogusComponenten.size(); i++) {
 
@@ -69,6 +75,42 @@ public class CatalogusPanel extends Panel {
 
             // Het toevoegen van het component
             add(component);
+
+
+            // MouseListener aan afbeeldingslabel koppelen
+            jlAfbeelding.addMouseListener(new MouseAdapter() {
+                public void mouseEntered(MouseEvent e) {
+                    isHighlighted = true;
+                    // Vderander border color wanneer de label gehighlight is
+                    jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+                    jlAfbeelding.setOpaque(true);
+                }
+
+                //
+                public void mouseExited(MouseEvent e) {
+                    // Check of rechtermuisknop geklikt is, dan niet de kleur aanpassen
+                    if ((e.getModifiers() & MouseEvent.BUTTON3_MASK) == MouseEvent.BUTTON3_MASK) {
+                        return;
+                    }
+
+                    // Als de rechtermuisknop niet ingedrukt is en de label is niet geselecteerd, doe normale kleuren
+                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
+                    jlAfbeelding.setOpaque(false);
+                }
+
+                // Als rechtermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
+                public void mousePressed(MouseEvent e) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // Maak de popup menu aan
+                        JPopupMenu popupMenu = new JPopupMenu();
+                        JMenuItem toevoegen = new JMenuItem("Voeg component toe");
+                        popupMenu.add(toevoegen);
+
+                        // Popup laten zien op de coordinaten van de cursor
+                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            });
         }
     }
 }
