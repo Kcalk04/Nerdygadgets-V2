@@ -21,7 +21,7 @@ public class CatalogusPanel extends Panel {
         catalogusComponenten = new ArrayList<>();
 
         // Het initialiseren van de verschillende componenten
-        Component pfsense = new Component("pfSense firewall", 4000, 90, ComponentType.PFSENSE);
+        Component pfsense = new Component("pfSense", 4000, 90, ComponentType.PFSENSE);
         Component mySQL1 = new Component("HAL9001DB", 5100, 90, ComponentType.DATABASESERVER);
         Component mySQL2 = new Component("HAL9002DB", 7700, 95, ComponentType.DATABASESERVER);
         Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
@@ -91,7 +91,7 @@ public class CatalogusPanel extends Panel {
 
                         // Maak de popup menu aan
                         JPopupMenu popupMenu = new JPopupMenu();
-                        JMenuItem toevoegen = new JMenuItem("Voeg component toe");
+                        JMenuItem toevoegen = new JMenuItem("Toevoegen");
                         popupMenu.add(toevoegen);
 
                         // Popup laten zien op de coordinaten van de cursor
