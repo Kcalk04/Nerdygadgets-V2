@@ -1,15 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class CatalogusPanel extends Panel {
-
-    public boolean isHighlighted = false;
+public class CatalogusPanel extends Panel implements ActionListener, MouseListener {
+    public int geselecteerdComponentID;
     private ArrayList<Component> catalogusComponenten;
+    public JMenuItem jmiToevoegen;
 
     public CatalogusPanel(ArrayList<Component> componenten) {
         super(componenten);
@@ -44,7 +41,7 @@ public class CatalogusPanel extends Panel {
 
     // Deze functie tekent alle componenten binnen de catelogus en zorgt ervoor dat rechtermuisknop menu werkt
     private void tekenCatelogus() {
-        for(int i = 0; i < catalogusComponenten.size(); i++) {
+        for (int i = 0; i < catalogusComponenten.size(); i++) {
 
             // Het aanmaken van een panel zodat alle gegevens van een component bij elkaar blijft
             JPanel component = new JPanel();
@@ -61,6 +58,7 @@ public class CatalogusPanel extends Panel {
             layout.gridy = 0;
 
             JLabel jlAfbeelding = new JLabel(catalogusComponenten.get(i).getAfbeelding());
+            jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
             component.add(jlAfbeelding);
 
             layout.gridy = 1;
@@ -76,39 +74,100 @@ public class CatalogusPanel extends Panel {
             component.add(jlBeschikbaarheid, layout);
 
             // Het toevoegen van het component
+            jlAfbeelding.addMouseListener(this);
             add(component);
 
 
             // MouseListener aan afbeeldingslabel koppelen
-            jlAfbeelding.addMouseListener(new MouseAdapter() {
-                // Als linkermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
-                public void mousePressed(MouseEvent e) {
-                    if (SwingUtilities.isLeftMouseButton(e)) {
-                        isHighlighted = true;
-                        // Verander border color wanneer de label gehighlight is
-                        jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-                        jlAfbeelding.setOpaque(true);
 
-                        // Maak de popup menu aan
-                        JPopupMenu popupMenu = new JPopupMenu();
-                        JMenuItem toevoegen = new JMenuItem("Toevoegen");
-                        popupMenu.add(toevoegen);
-
-                        // Popup laten zien op de coordinaten van de cursor
-                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
-                    }
-                }
-                public void mouseExited(MouseEvent e) {
-                    // Check of linkermuisknop geklikt is, dan niet de kleur aanpassen
-                    if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
-                        return;
-                    }
-
-                    // Als de linkermuisknop niet ingedrukt is, doe normale kleuren
-                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
-                    jlAfbeelding.setOpaque(false);
-                }
-            });
         }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == jmiToevoegen) {
+            Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
+            System.out.println(geselecteerdComponentID);
+            Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
+
+            SimulatieFrame.visualisatiePanel.voegComponentToe(component);
+            SimulatieFrame.visualisatiePanel.tekenVisualisatiePanel();
+            System.out.println("Component toegevoegd");
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            // Verander border color wanneer de label gehighlight is
+//            jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+//            jlAfbeelding.setOpaque(true);
+
+            // Maak de popup menu aan
+            JPopupMenu popupMenu = new JPopupMenu();
+            jmiToevoegen = new JMenuItem("Toevoegen");
+            jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
+
+            JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
+            String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
+            int id = Integer.parseInt(imageId);
+
+            geselecteerdComponentID = id;
+
+            popupMenu.add(jmiToevoegen);
+
+            // Popup laten zien op de coordinaten van de cursor
+            popupMenu.show(e.getComponent(), e.getX(), e.getY());
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
+
+//    public void mouseExited(MouseEvent g) { // CLEAR BORDER NA TOEVOEGEN EN DESELECT
+//        // Check of linkermuisknop geklikt is, dan niet de kleur aanpassen
+////                    if ((g.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
+////                        return;
+////                    }
+//
+//        // Als de linkermuisknop niet ingedrukt is, doe normale kleuren
+////                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
+////                    jlAfbeelding.setOpaque(false);
+//    }
+//});
+//
+//jlAfbeelding.addMouseListener(new MouseAdapter() {
+        // Als linkermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
+
+//            @Override
+//            public void actionPerformed(ActionEvent f) { // f moet nog voor andere dingen gebruikt worden
+//                JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
+//                String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
+//                int id = Integer.parseInt(imageId);
+//
+//                Component voorbeeldComponent = catalogusComponenten.get(id);
+//                System.out.println(id);
+//                Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
+//
+//                SimulatieFrame.visualisatiePanel.voegComponentToe(component);
+//                SimulatieFrame.visualisatiePanel.tekenVisualisatiePanel();
+////                System.out.println("Component toegevoegd");
+////            }
+//        }
