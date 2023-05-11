@@ -6,59 +6,64 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class VisualisatiePanel extends Panel {
-    public boolean isHighlighted = false;
-    public void voegComponentToe(Component component) {
-        componenten.add(component);
+    public class VisualisatiePanel extends Panel {
+        public boolean isHighlighted = false;
+
+        public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
+            super(geselecteerdeComponenten);
+            setBackground(Color.white);
+
+            setPreferredSize(new Dimension(0, 0));
+            setLayout(new GridLayout(5, 2));
+        }
+
+        public void voegComponentToe(Component component) {
+            componenten.add(component);
+            tekenVisualisatiePanel();
+        }
+
+        // Deze functie tekent alle componenten binnen de catalogus en zorgt ervoor dat het rechtermuisknopmenu werkt
+        public void tekenVisualisatiePanel() {
+            removeAll(); // Verwijder alle componenten uit het panel voordat je ze opnieuw tekent
+
+            for (int i = 0; i < componenten.size(); i++) {
+                // Het aanmaken van een panel zodat alle gegevens van een component bij elkaar blijft
+                JPanel component = new JPanel();
+                component.setLayout(new GridBagLayout());
+
+                GridBagConstraints layout = new GridBagConstraints();
+
+                // Zorgt ervoor dat de componenten in een vierkant blijven en niet strekken
+                layout.fill = GridBagConstraints.NONE;
+
+                // Zorgt ervoor dat elk label onder elkaar komt (gridy gaat steeds 1 omhoog)
+                layout.gridx = 0;
+                layout.gridy = 0;
+
+                JLabel jlAfbeelding = new JLabel(componenten.get(i).getAfbeelding());
+                jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
+                jlAfbeelding.addMouseListener(this); // DIT IS KAPOT OFZO JOCHEM KIJK HIER FF NAAR
+                component.add(jlAfbeelding);
+
+                layout.gridy = 1;
+                JLabel jlNaam = new JLabel(componenten.get(i).getNaam());
+                component.add(jlNaam, layout);
+
+                layout.gridy = 2;
+                JLabel jlKosten = new JLabel("€" + componenten.get(i).getKosten());
+                component.add(jlKosten, layout);
+
+                layout.gridy = 3;
+                JLabel jlBeschikbaarheid = new JLabel(componenten.get(i).getBeschikbaarheid() + "%");
+                component.add(jlBeschikbaarheid, layout);
+
+                // Het toevoegen van het component
+                add(component);
+
+            }
+            revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
+        }
     }
-
-    public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
-        super(geselecteerdeComponenten);
-        setBackground(Color.white);
-
-        setPreferredSize(new Dimension(0, 0));
-        setLayout(new GridLayout(5, 2));
-    }
-
-
-
-    // Deze functie tekent alle componenten binnen de catelogus en zorgt ervoor dat rechtermuisknop menu werkt
-    public void tekenVisualisatiePanel() {
-        for(int i = 0; i < componenten.size(); i++) {
-
-            // Het aanmaken van een panel zodat alle gegevens van een component bij elkaar blijft
-            JPanel component = new JPanel();
-            component.setLayout(new GridBagLayout());
-
-            GridBagConstraints layout = new GridBagConstraints();
-
-            // Zorgt ervoor dat de componenten in een vierkant blijven en niet strechten
-            layout.fill = GridBagConstraints.NONE;
-
-            // Zorgt ervoor dat elk label onder elkaar komt (gridy gaat steeds 1 omhoog)
-            layout.gridx = 0;
-            layout.gridy = 0;
-
-            JLabel jlAfbeelding = new JLabel(componenten.get(i).getAfbeelding());
-            jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
-            component.add(jlAfbeelding);
-
-            layout.gridy = 1;
-            JLabel jlNaam = new JLabel(componenten.get(i).getNaam());
-            component.add(jlNaam, layout);
-
-            layout.gridy = 2;
-            JLabel jlKosten = new JLabel("€" + componenten.get(i).getKosten());
-            component.add(jlKosten, layout);
-
-            layout.gridy = 3;
-            JLabel jlBeschikbaarheid = new JLabel(componenten.get(i).getBeschikbaarheid() + "%");
-            component.add(jlBeschikbaarheid, layout);
-
-            // Het toevoegen van het component
-            SimulatieFrame.visualisatiePanel.add(component);
-            System.out.println(componenten.get(i).getNaam() + " toegevoegd");
-            System.out.println();
 
 //            // MouseListener aan afbeeldingslabel koppelen
 //            jlAfbeelding.addMouseListener(new MouseAdapter() {
@@ -106,7 +111,4 @@ public class VisualisatiePanel extends Panel {
 //                    jlAfbeelding.setOpaque(false);
 //                }
 //            });
-        }
-    }
 
-}
