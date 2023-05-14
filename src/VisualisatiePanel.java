@@ -1,26 +1,72 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-    public class VisualisatiePanel extends Panel {
-        public boolean isHighlighted = false;
+    public class VisualisatiePanel extends Panel implements MouseListener {
+        double totaleKosten = 0.0;
+        double totaleBeschikbaarheid = 1.0;
+        private ArrayList<Component> componenten;
 
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
+            this.componenten = geselecteerdeComponenten;
             setBackground(Color.white);
 
             setPreferredSize(new Dimension(0, 0));
             setLayout(new GridLayout(5, 2));
+
+
+            // Maak menu panel aan voor verwijder knop en kosten/beschikbaarheid overzicht
+            MenuPanel menuPanel = new MenuPanel();
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.anchor = GridBagConstraints.PAGE_END;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.weightx = 1.0;
+//            add(menuPanel, gbc);
         }
 
         public void voegComponentToe(Component component) {
+            // Toevoegen componenten
             componenten.add(component);
             tekenVisualisatiePanel();
+
+            berekenKosten(component);
+            berekenBeschikbaarheid(component);
         }
+
+        public double berekenBeschikbaarheid(Component component) {
+            double beschikbaarheidPfsense = 1;
+            double beschikbaarheidDatabase = 1;
+            double beschikbaarheidWeb = 1;
+
+            // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
+            if (component.getType() == ComponentType.PFSENSE) {
+                beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+            if (component.getType() == ComponentType.DATABASESERVER) {
+                beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+            if (component.getType() == ComponentType.WEBSERVER) {
+                beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+
+            totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
+            System.out.println(totaleBeschikbaarheid);
+            return totaleBeschikbaarheid;
+        }
+
+        public double berekenKosten(Component component) {
+            // Berekenen totale kosten
+            totaleKosten += component.getKosten();
+            System.out.println(totaleKosten);
+            return totaleKosten;
+        }
+
+
+
 
         // Deze functie tekent alle componenten binnen de catalogus en zorgt ervoor dat het rechtermuisknopmenu werkt
         public void tekenVisualisatiePanel() {
@@ -62,53 +108,48 @@ import java.util.ArrayList;
 
             }
             revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
+
+
+            JButton verwijderButton = new JButton("Verwijder alles");
+            verwijderButton.setLocation(200, 200);
+            add(verwijderButton);
+            verwijderButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    removeAll();
+                    repaint();
+                    componenten.clear();
+                    totaleKosten = 0.0;
+                }
+            });
+
+
+        }
+
+
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
         }
     }
-
-//            // MouseListener aan afbeeldingslabel koppelen
-//            jlAfbeelding.addMouseListener(new MouseAdapter() {
-//                // Als linkermuisknop geklikt wordt, maak popup menuutje aan met toevoegen optie
-//                public void mousePressed(MouseEvent e) {
-//                    if (SwingUtilities.isLeftMouseButton(e)) {
-//                        isHighlighted = true;
-//                        // Verander border color wanneer de label gehighlight is
-//                        jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-//                        jlAfbeelding.setOpaque(true);
-//
-//                        // Maak de popup menu aan
-//                        JPopupMenu popupMenu = new JPopupMenu();
-//                        JMenuItem toevoegen = new JMenuItem("Toevoegen");
-//                        popupMenu.add(toevoegen);
-//
-//                        // Popup laten zien op de coordinaten van de cursor
-//                        popupMenu.show(e.getComponent(), e.getX(), e.getY());
-//
-//                        toevoegen.addActionListener(new ActionListener() {
-//                            @Override
-//                            public void actionPerformed(ActionEvent f) { // f moet nog voor andere dingen gebruikt worden
-//                                JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
-//                                String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
-//                                int id = Integer.parseInt(imageId);
-//
-//                                Component voorbeeldComponent = componenten.get(id);
-//                                Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
-//                                System.out.println(component.getNaam());
-//
-//                                VisualisatiePanel visualisatiePanel = new VisualisatiePanel(componenten);
-//                                visualisatiePanel.voegComponentToe(component);
-//                            }
-//                        });
-//                    }
-//                }
-//                public void mouseExited(MouseEvent g) { // CLEAR BORDER NA TOEVOEGEN EN DESELECT
-//                    // Check of linkermuisknop geklikt is, dan niet de kleur aanpassen
-//                    if ((g.getModifiers() & MouseEvent.BUTTON1_MASK) == MouseEvent.BUTTON1_MASK) {
-//                        return;
-//                    }
-//
-//                    // Als de linkermuisknop niet ingedrukt is, doe normale kleuren
-//                    jlAfbeelding.setBorder(BorderFactory.createEmptyBorder());
-//                    jlAfbeelding.setOpaque(false);
-//                }
-//            });
-

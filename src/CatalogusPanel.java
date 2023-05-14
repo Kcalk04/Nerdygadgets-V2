@@ -24,7 +24,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
         Component apacheServer1 = new Component("HAL9001W", 2200, 80, ComponentType.WEBSERVER);
         Component apacheServer2 = new Component("HAL9002W", 3200, 90, ComponentType.WEBSERVER);
-        Component apacheServer3 = new Component("HAL9002W", 5100, 95, ComponentType.WEBSERVER);
+        Component apacheServer3 = new Component("HAL9003W", 5100, 95, ComponentType.WEBSERVER);
 
 
         // Het toevoegen van de componenten aan de catelogus
@@ -87,11 +87,9 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == jmiToevoegen) {
             Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
-            System.out.println(geselecteerdComponentID);
             Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
 
             SimulatieFrame.visualisatiePanel.voegComponentToe(component);
-            SimulatieFrame.visualisatiePanel.tekenVisualisatiePanel();
         }
     }
 
