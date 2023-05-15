@@ -76,8 +76,6 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             // Het toevoegen van het component
             jlAfbeelding.addMouseListener(this);
             add(component);
-
-
             // MouseListener aan afbeeldingslabel koppelen
 
         }
