@@ -118,6 +118,7 @@ import java.util.ArrayList;
 
             JButton verwijderButton = new JButton("Verwijder alles");
             verwijderButton.setLocation(200, 200);
+            verwijderButton.setFocusable(false);
             add(verwijderButton);
             verwijderButton.addActionListener(new ActionListener() {
                 @Override
