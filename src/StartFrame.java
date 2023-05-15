@@ -35,7 +35,7 @@ public class StartFrame extends JFrame implements ActionListener {
         if(e.getSource() == jbSimulatie) {
             new SimulatieFrame(this, true);
         } else if(e.getSource() == jbMonitoring) {
-
+            new MonitoringFrame(this, true);
         }
     }
 }
