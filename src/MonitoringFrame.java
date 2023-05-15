@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 public class MonitoringFrame extends JFrame implements ActionListener {
     private JTextField jtf;
     private JLabel searchLbl;
-    private DefaultTableModel model;
     private JTable table;
     private TableRowSorter sorter;
     private JScrollPane jsp;
@@ -27,24 +26,22 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         jtf = new JTextField(15);
         searchLbl = new JLabel("Search");
         String search = jtf.getText();
-        String[] columnNames = {"Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
-        Object[][] rowData = {{"Raja", "Active" , 24 + "-" + 16.36},{"Vineet", "Down"},{"Archana", "Python"},{"Krishna", "Scala"},{"Adithya", "AWS"},{"Jai", ".Net"}};
-        model = new DefaultTableModel(rowData, columnNames);
-        model.setRowCount(10); // set the number of rows to 10
+        MonitoringTable model = new MonitoringTable();
         sorter = new TableRowSorter<>(model);
         table = new JTable(model);
         table.setRowSorter(sorter);
         setLayout(new FlowLayout(FlowLayout.CENTER));
         jsp = new JScrollPane(table);
-        TableCellEditor doubleEditor = new DefaultCellEditor(new JFormattedTextField(NumberFormat.getNumberInstance()));
-        TableCellEditor timestampEditor = new DefaultCellEditor(new JFormattedTextField(new SimpleDateFormat("dd-HH:mm:ss")));
-        TableCellEditor percentageEditor = new DefaultCellEditor(new JFormattedTextField(NumberFormat.getPercentInstance()));
-        table.getColumnModel().getColumn(3).setCellEditor(timestampEditor);
         jsp.setBorder(null);
         jsp.setPreferredSize(table.getPreferredSize());
         table.setFillsViewportHeight(true);
         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + search, 0));
-        table.setRowSorter(sorter);
+        table.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                // Do nothing, disable selection
+            }
+        });
         add(searchLbl);
         add(jtf);
         add(jsp);
