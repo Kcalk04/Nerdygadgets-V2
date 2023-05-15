@@ -3,10 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-    public class VisualisatiePanel extends Panel implements MouseListener {
+    public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
         double totaleKosten = 0.0;
         double totaleBeschikbaarheid = 1.0;
         private ArrayList<Component> componenten;
+        public JMenuItem jmiVerwijderen;
+        public int geselecteerdComponentID;
 
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
@@ -34,27 +36,30 @@ import java.util.ArrayList;
             tekenVisualisatiePanel();
 
             berekenKosten(component);
-            berekenBeschikbaarheid(component);
+            berekenBeschikbaarheid();
         }
 
-        public double berekenBeschikbaarheid(Component component) {
+        public double berekenBeschikbaarheid() {
             double beschikbaarheidPfsense = 1;
             double beschikbaarheidDatabase = 1;
             double beschikbaarheidWeb = 1;
 
-            // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
-            if (component.getType() == ComponentType.PFSENSE) {
-                beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-            }
-            if (component.getType() == ComponentType.DATABASESERVER) {
-                beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-            }
-            if (component.getType() == ComponentType.WEBSERVER) {
-                beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            for (Component component : componenten) {
+                // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
+                if (component.getType() == ComponentType.PFSENSE) {
+                    beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                }
+                if (component.getType() == ComponentType.WEBSERVER) {
+                    beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                }
+
+                totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
+                System.out.println(totaleBeschikbaarheid);
             }
 
-            totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
-            System.out.println(totaleBeschikbaarheid);
             return totaleBeschikbaarheid;
         }
 
@@ -104,6 +109,7 @@ import java.util.ArrayList;
                 component.add(jlBeschikbaarheid, layout);
 
                 // Het toevoegen van het component
+                jlAfbeelding.addMouseListener(this);
                 add(component);
 
             }
@@ -125,6 +131,44 @@ import java.util.ArrayList;
 
 
         }
+        public double aftrekkenKosten(Component component) {
+            totaleKosten -= component.getKosten();
+            System.out.println(totaleKosten);
+            return totaleKosten;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == jmiVerwijderen) {
+                aftrekkenKosten(componenten.get(geselecteerdComponentID));
+                componenten.remove(geselecteerdComponentID);
+                tekenVisualisatiePanel();
+                repaint();
+                System.out.println(componenten.size());
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+
+                // Maak de popup menu aan
+                JPopupMenu popupMenu = new JPopupMenu();
+                jmiVerwijderen = new JMenuItem("Verwijderen");
+                jmiVerwijderen.addActionListener(this);
+
+                JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
+                String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
+                int id = Integer.parseInt(imageId);
+
+                geselecteerdComponentID = id;
+
+                popupMenu.add(jmiVerwijderen);
+
+                // Popup laten zien op de coordinaten van de cursor
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+
 
 
 
@@ -133,10 +177,6 @@ import java.util.ArrayList;
 
         }
 
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
 
         @Override
         public void mouseReleased(MouseEvent e) {
