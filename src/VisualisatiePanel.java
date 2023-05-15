@@ -36,7 +36,6 @@ import java.util.ArrayList;
             berekenKosten(component);
             berekenBeschikbaarheid(component);
         }
-
         public double berekenBeschikbaarheid(Component component) {
             double beschikbaarheidPfsense = 1;
             double beschikbaarheidDatabase = 1;
@@ -88,7 +87,7 @@ import java.util.ArrayList;
 
                 JLabel jlAfbeelding = new JLabel(componenten.get(i).getAfbeelding());
                 jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
-                jlAfbeelding.addMouseListener(this); // DIT IS KAPOT OFZO JOCHEM KIJK HIER FF NAAR
+                jlAfbeelding.addMouseListener(this);
                 component.add(jlAfbeelding);
 
                 layout.gridy = 1;
@@ -122,8 +121,6 @@ import java.util.ArrayList;
                     totaleKosten = 0.0;
                 }
             });
-
-
         }
 
 
