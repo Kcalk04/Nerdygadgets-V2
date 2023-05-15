@@ -77,6 +77,18 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             jlAfbeelding.addMouseListener(this);
             add(component);
 
+            // MouseListener aan afbeeldingslabel koppelen
+
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == jmiToevoegen) {
+            Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
+            Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
+
+            SimulatieFrame.visualisatiePanel.voegComponentToe(component);
 
         }
     }
