@@ -90,6 +90,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
 
             SimulatieFrame.visualisatiePanel.voegComponentToe(component);
+            repaint();
         }
     }
 
