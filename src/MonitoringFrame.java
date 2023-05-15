@@ -30,7 +30,10 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         sorter = new TableRowSorter<>(model);
         table = new JTable(model);
         table.setRowSorter(sorter);
-        setLayout(new FlowLayout(FlowLayout.CENTER));
+        setSize(new Dimension(900,720));
+//        setLayout(new GridLayout(0,7));
+//        setLayout(new GridLayout(2, 0));
+        setLayout(new FlowLayout(FlowLayout.CENTER,50,300));
         jsp = new JScrollPane(table);
         jsp.setBorder(null);
         jsp.setPreferredSize(table.getPreferredSize());
@@ -66,10 +69,9 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 }
             }
         });
-            setSize(new Dimension(900,720));
-            setLayout(new GridLayout(0,1));
 
-            // Zorgt ervoor dat de frame niet in fullscreen kan en niet uit te groten is
+
+            // Zorgt ervoor dat het frame niet in fullscreen kan en niet uit te groten is
             setResizable(false);
 
             GridBagConstraints layout = new GridBagConstraints();
