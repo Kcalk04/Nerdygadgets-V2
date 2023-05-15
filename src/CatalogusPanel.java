@@ -89,7 +89,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
 
             SimulatieFrame.visualisatiePanel.voegComponentToe(component);
-
+            repaint();
         }
     }
 
@@ -109,16 +109,6 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
 
             // Popup laten zien op de coordinaten van de cursor
             popupMenu.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == jmiToevoegen) {
-            Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
-            Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
-
-            SimulatieFrame.visualisatiePanel.voegComponentToe(component);
         }
     }
 
