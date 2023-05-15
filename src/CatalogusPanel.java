@@ -76,8 +76,39 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             // Het toevoegen van het component
             jlAfbeelding.addMouseListener(this);
             add(component);
+
             // MouseListener aan afbeeldingslabel koppelen
 
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == jmiToevoegen) {
+            Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
+            Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
+
+            SimulatieFrame.visualisatiePanel.voegComponentToe(component);
+
+        }
+    }
+
+    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            // Maak de popup menu aan
+            JPopupMenu popupMenu = new JPopupMenu();
+            jmiToevoegen = new JMenuItem("Toevoegen");
+            jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
+
+            JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
+            String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
+            int id = Integer.parseInt(imageId);
+            geselecteerdComponentID = id;
+
+            popupMenu.add(jmiToevoegen);
+
+            // Popup laten zien op de coordinaten van de cursor
+            popupMenu.show(e.getComponent(), e.getX(), e.getY());
         }
     }
 
@@ -91,29 +122,6 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         }
     }
 
-    public void mousePressed(MouseEvent e) {
-        if (SwingUtilities.isLeftMouseButton(e)) {
-            // Verander border color wanneer de label gehighlight is
-//            jlAfbeelding.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-//            jlAfbeelding.setOpaque(true);
-
-            // Maak de popup menu aan
-            JPopupMenu popupMenu = new JPopupMenu();
-            jmiToevoegen = new JMenuItem("Toevoegen");
-            jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
-
-            JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
-            String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
-            int id = Integer.parseInt(imageId);
-
-            geselecteerdComponentID = id;
-
-            popupMenu.add(jmiToevoegen);
-
-            // Popup laten zien op de coordinaten van de cursor
-            popupMenu.show(e.getComponent(), e.getX(), e.getY());
-        }
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
