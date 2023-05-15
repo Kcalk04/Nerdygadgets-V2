@@ -15,17 +15,6 @@ import java.util.ArrayList;
 
             setPreferredSize(new Dimension(0, 0));
             setLayout(new GridLayout(5, 2));
-
-
-            // Maak menu panel aan voor verwijder knop en kosten/beschikbaarheid overzicht
-            MenuPanel menuPanel = new MenuPanel();
-            GridBagConstraints gbc = new GridBagConstraints();
-            gbc.gridx = 0;
-            gbc.gridy = 1;
-            gbc.anchor = GridBagConstraints.PAGE_END;
-            gbc.fill = GridBagConstraints.HORIZONTAL;
-            gbc.weightx = 1.0;
-//            add(menuPanel, gbc);
         }
 
         public void voegComponentToe(Component component) {
@@ -58,8 +47,21 @@ import java.util.ArrayList;
         }
 
         public double berekenKosten(Component component) {
+            double kostenPfsense = 1;
+            double kostenDatabase = 1;
+            double kostenWeb = 1;
+            if (component.getType() == ComponentType.PFSENSE) {
+                kostenPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+            if (component.getType() == ComponentType.DATABASESERVER) {
+                kostenDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+            if (component.getType() == ComponentType.WEBSERVER) {
+                kostenWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+            }
+
             // Berekenen totale kosten
-            totaleKosten += component.getKosten();
+            totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
             System.out.println(totaleKosten);
             return totaleKosten;
         }
@@ -83,7 +85,7 @@ import java.util.ArrayList;
 
                 // Zorgt ervoor dat elk label onder elkaar komt (gridy gaat steeds 1 omhoog)
                 layout.gridx = 0;
-                layout.gridy = 0;
+                layout.gridy = 2;
 
                 JLabel jlAfbeelding = new JLabel(componenten.get(i).getAfbeelding());
                 jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
