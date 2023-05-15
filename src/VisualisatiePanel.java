@@ -123,10 +123,13 @@ import java.util.ArrayList;
             verwijderButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    removeAll();
-                    repaint();
-                    componenten.clear();
-                    totaleKosten = 0.0;
+                    int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    if(input == JOptionPane.YES_OPTION) {
+                        removeAll();
+                        repaint();
+                        componenten.clear();
+                        totaleKosten = 0.0;
+                    }
                 }
             });
 
@@ -137,14 +140,15 @@ import java.util.ArrayList;
             System.out.println(totaleKosten);
             return totaleKosten;
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == jmiVerwijderen) {
-                aftrekkenKosten(componenten.get(geselecteerdComponentID));
-                componenten.remove(geselecteerdComponentID);
-                tekenVisualisatiePanel();
-                repaint();
-                System.out.println(componenten.size());
+                    aftrekkenKosten(componenten.get(geselecteerdComponentID));
+                    componenten.remove(geselecteerdComponentID);
+                    tekenVisualisatiePanel();
+                    repaint();
+                    System.out.println(componenten.size());
             }
         }
 
