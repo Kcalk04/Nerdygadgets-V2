@@ -30,22 +30,27 @@ import java.util.ArrayList;
 
 
         public double berekenBeschikbaarheid() {
-
-
                 double beschikbaarheidPfsense = 1;
                 double beschikbaarheidDatabase = 1;
                 double beschikbaarheidWeb = 1;
 
+                int aantalPfsense = 0;
+                int aantalDatabase = 0;
+                int aantalWeb = 0;
+
                 for (Component component : componenten) {
                     // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
                     if (component.getType() == ComponentType.PFSENSE) {
-                        beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                        aantalPfsense++;
+                        beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalPfsense);
                     }
                     if (component.getType() == ComponentType.DATABASESERVER) {
-                        beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                        aantalDatabase++;
+                        beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalDatabase);
                     }
                     if (component.getType() == ComponentType.WEBSERVER) {
-                        beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                        aantalWeb++;
+                        beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalWeb);
                     }
 
                     totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
