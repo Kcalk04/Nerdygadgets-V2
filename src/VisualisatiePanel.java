@@ -10,6 +10,10 @@ import java.util.ArrayList;
         public JMenuItem jmiVerwijderen;
         public int geselecteerdComponentID;
 
+        double kostenWeb;
+        double kostenPfsense;
+        double kostenDatabase;
+
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
             this.componenten = geselecteerdeComponenten;
@@ -17,6 +21,10 @@ import java.util.ArrayList;
 
             setPreferredSize(new Dimension(0, 0));
             setLayout(new GridLayout(5, 2));
+
+            kostenWeb = 0;
+            kostenPfsense = 0;
+            kostenDatabase = 0;
         }
 
         public void voegComponentToe(Component component) {
@@ -24,58 +32,57 @@ import java.util.ArrayList;
             componenten.add(component);
             tekenVisualisatiePanel();
 
-            berekenKosten(component);
+            berekenKosten();
             berekenBeschikbaarheid();
         }
 
 
-        public double berekenBeschikbaarheid() {
-                double beschikbaarheidPfsense = 1;
-                double beschikbaarheidDatabase = 1;
-                double beschikbaarheidWeb = 1;
+        public void berekenBeschikbaarheid(){
+            double totaalPercentage = 0;
+            double beschikbaarheidPfsense = 1;
+            double beschikbaarheidWeb = 1;
+            double beschikbaarheidDatabase = 1;
 
-                int aantalPfsense = 0;
-                int aantalDatabase = 0;
-                int aantalWeb = 0;
-
-                for (Component component : componenten) {
-                    // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
-                    if (component.getType() == ComponentType.PFSENSE) {
-                        aantalPfsense++;
-                        beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalPfsense);
-                    }
-                    if (component.getType() == ComponentType.DATABASESERVER) {
-                        aantalDatabase++;
-                        beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalDatabase);
-                    }
-                    if (component.getType() == ComponentType.WEBSERVER) {
-                        aantalWeb++;
-                        beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), aantalWeb);
-                    }
-
-                    totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
-                    System.out.println(totaleBeschikbaarheid);
-                }
-
-                return totaleBeschikbaarheid;
-            }
-
-            public double berekenKosten (Component component){
-                double kostenPfsense = 1;
-                double kostenDatabase = 1;
-                double kostenWeb = 1;
+            for (Component component: componenten) {
                 if (component.getType() == ComponentType.PFSENSE) {
-                    kostenPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-                }
-                if (component.getType() == ComponentType.DATABASESERVER) {
-                    kostenDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                    beschikbaarheidPfsense *= (1 - (component.getBeschikbaarheid() / 100));
                 }
                 if (component.getType() == ComponentType.WEBSERVER) {
-                    kostenWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                    beschikbaarheidWeb *= (1 - (component.getBeschikbaarheid() / 100));
                 }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    beschikbaarheidDatabase *= (1 - (component.getBeschikbaarheid() / 100));
+                }
+            }
+            beschikbaarheidPfsense = 1 - beschikbaarheidPfsense;
+            beschikbaarheidWeb = 1 - beschikbaarheidWeb;
+            beschikbaarheidDatabase = 1 - beschikbaarheidDatabase;
 
+            totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase) * 100;
+            System.out.println(totaalPercentage);
+        }
+
+            public double berekenKosten () {
+            kostenPfsense = 0;
+            kostenDatabase = 0;
+            kostenWeb =  0;
+            totaleKosten = 0;
+
+                for (Component component : componenten) {
+                    if (component.getType() == ComponentType.PFSENSE) {
+                        kostenPfsense = component.getKosten();
+                        totaleKosten += kostenPfsense;
+                    }
+                    if (component.getType() == ComponentType.DATABASESERVER) {
+                        kostenDatabase = component.getKosten();
+                        totaleKosten += kostenDatabase;
+                    }
+                    if (component.getType() == ComponentType.WEBSERVER) {
+                        kostenWeb = component.getKosten();
+                        totaleKosten += kostenWeb;
+                    }
+                }
                 // Berekenen totale kosten
-                totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
                 System.out.println(totaleKosten);
                 return totaleKosten;
             }

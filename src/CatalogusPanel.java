@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class CatalogusPanel extends Panel implements ActionListener, MouseListener {
     public int geselecteerdComponentID;
-    private ArrayList<Component> catalogusComponenten;
+    public ArrayList<Component> catalogusComponenten;
     public JMenuItem jmiToevoegen;
 
     public CatalogusPanel(ArrayList<Component> componenten) {
@@ -18,7 +18,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         catalogusComponenten = new ArrayList<>();
 
         // Het initialiseren van de verschillende componenten
-        Component pfsense = new Component("pfSense", 4000, 90, ComponentType.PFSENSE);
+        Component pfsense = new Component("pfSense", 4000, 99.998, ComponentType.PFSENSE);
         Component mySQL1 = new Component("HAL9001DB", 5100, 90, ComponentType.DATABASESERVER);
         Component mySQL2 = new Component("HAL9002DB", 7700, 95, ComponentType.DATABASESERVER);
         Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
