@@ -12,7 +12,7 @@ public class StartFrame extends JFrame implements ActionListener {
         setTitle("ICTM2n - Groep 1");
         setSize(new Dimension(600,400));
 
-        // Zorgt ervoor dat de frame niet in fullscreen kan en niet uit te groten is
+        // Zorgt ervoor dat het frame niet in fullscreen kan en niet uit te groten is
         setResizable(false);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
