@@ -18,6 +18,8 @@ public class MonitoringFrame extends JFrame implements ActionListener {
     private JTable table;
     private TableRowSorter sorter;
     private JScrollPane jsp;
+    private static LowLevelMonitoringPanel lowLevelMonitoringPanel;
+    private static TopLevelMonitoringPanel topLevelMonitoringPanel;
 
 
     public MonitoringFrame(JFrame owner, boolean modal) {
@@ -31,12 +33,17 @@ public class MonitoringFrame extends JFrame implements ActionListener {
         table = new JTable(model);
         table.setRowSorter(sorter);
         setSize(new Dimension(900,720));
+        LowLevelMonitoringPanel lowLevelMonitoringPanel = new LowLevelMonitoringPanel();
+        TopLevelMonitoringPanel topLevelMonitoringPanel = new TopLevelMonitoringPanel();
 //        setLayout(new GridLayout(0,7));
 //        setLayout(new GridLayout(2, 0));
-        setLayout(new FlowLayout(FlowLayout.CENTER,50,300));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 50, 200));
+        add(searchLbl);
+        add(jtf);
         jsp = new JScrollPane(table);
         jsp.setBorder(null);
         jsp.setPreferredSize(table.getPreferredSize());
+        add(jsp);
         table.setFillsViewportHeight(true);
         sorter.setRowFilter(RowFilter.regexFilter("(?i)" + search, 0));
         table.setSelectionModel(new DefaultListSelectionModel() {
@@ -45,9 +52,7 @@ public class MonitoringFrame extends JFrame implements ActionListener {
                 // Do nothing, disable selection
             }
         });
-        add(searchLbl);
-        add(jtf);
-        add(jsp);
+
         jtf.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {

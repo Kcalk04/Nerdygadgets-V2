@@ -49,7 +49,7 @@ import java.util.ArrayList;
                     }
 
                     totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
-                    System.out.println(totaleBeschikbaarheid);
+                    //System.out.println(totaleBeschikbaarheid);
                 }
 
                 return totaleBeschikbaarheid;
@@ -71,7 +71,7 @@ import java.util.ArrayList;
 
                 // Berekenen totale kosten
                 totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
-                System.out.println(totaleKosten);
+                //System.out.println(totaleKosten);
                 return totaleKosten;
             }
 
@@ -138,7 +138,7 @@ import java.util.ArrayList;
             }
             public double aftrekkenKosten (Component component){
                 totaleKosten -= component.getKosten();
-                System.out.println(totaleKosten);
+                //System.out.println(totaleKosten);
                 return totaleKosten;
             }
 
@@ -149,7 +149,7 @@ import java.util.ArrayList;
                     componenten.remove(geselecteerdComponentID);
                     tekenVisualisatiePanel();
                     repaint();
-                    System.out.println(componenten.size());
+                    //System.out.println(componenten.size());
                 }
             }
 
