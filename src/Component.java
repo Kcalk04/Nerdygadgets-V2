@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class Component {
     private String naam;
@@ -45,5 +48,20 @@ public class Component {
         } else {
             return new ImageIcon(rootPath + "/src/img/placeholder.jpg");
         }
+    }
+
+    public static ArrayList<Component> sort(ArrayList<Component> componenten) {
+
+        ArrayList<Component> c = new ArrayList<>();
+
+        for (int i = 0; i < ComponentType.values().length; i++) {
+            for (Component component : componenten) {
+                if (!c.contains(component) && component.getType().ordinal() <= i) {
+                    c.add(component);
+                }
+            }
+        }
+
+        return c;
     }
 }

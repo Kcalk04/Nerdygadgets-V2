@@ -2,8 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
-    public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
+public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
         double totaleKosten = 0.0;
         double totaleBeschikbaarheid = 1.0;
         private ArrayList<Component> componenten;
@@ -22,16 +25,18 @@ import java.util.ArrayList;
         public void voegComponentToe(Component component) {
             // Toevoegen componenten
             componenten.add(component);
+
+            ArrayList<Component> componentArrayList = new ArrayList<>(Component.sort(componenten));
+            componenten.clear();
+            componenten.addAll(componentArrayList);
+
             tekenVisualisatiePanel();
 
             berekenKosten(component);
             berekenBeschikbaarheid();
         }
 
-
         public double berekenBeschikbaarheid() {
-
-
                 double beschikbaarheidPfsense = 1;
                 double beschikbaarheidDatabase = 1;
                 double beschikbaarheidWeb = 1;
@@ -118,23 +123,25 @@ import java.util.ArrayList;
                 }
                 revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
 
-                JButton verwijderButton = new JButton("Verwijder alles");
-                verwijderButton.setFocusable(false);
-                add(verwijderButton);
+                if(componenten.size() > 0) {
+                    JButton verwijderButton = new JButton("Verwijder alles");
+                    verwijderButton.setFocusable(false);
+                    add(verwijderButton);
 
-                verwijderButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (input == JOptionPane.YES_OPTION) {
-                            removeAll();
-                            revalidate();
-                            repaint();
-                            componenten.clear();
-                            totaleKosten = 0.0;
+                    verwijderButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                            if (input == JOptionPane.YES_OPTION) {
+                                removeAll();
+                                revalidate();
+                                repaint();
+                                componenten.clear();
+                                totaleKosten = 0.0;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             public double aftrekkenKosten (Component component){
                 totaleKosten -= component.getKosten();

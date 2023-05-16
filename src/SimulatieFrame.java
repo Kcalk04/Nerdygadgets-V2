@@ -210,6 +210,10 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
 
                     ComponentType componentType = ComponentType.values()[type1];
 
+                    if(visualisatiePanel.jmiVerwijderen != null) {
+                        visualisatiePanel.remove(visualisatiePanel.jmiVerwijderen);
+                    }
+
                     Component nieuwComponent = new Component(naam, kosten, beschikbaarheid, componentType);
                     visualisatiePanel.voegComponentToe(nieuwComponent);
                 }

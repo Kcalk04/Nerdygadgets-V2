@@ -102,6 +102,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
                 jmiToevoegen.setEnabled(false);
             } else {
                 jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
+                jmiToevoegen.setEnabled(true);
             }
 
             JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
