@@ -59,13 +59,13 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         // grid (x: 0, y: 0)
         layout.gridx = 0;
         layout.gridy = 1;
-        layout.weightx = 2;
+        layout.weightx = 1;
         catalogusPanel = new CatalogusPanel(componenten);
         add(catalogusPanel, layout);
 
         // grid (x: 2, y: 0)
         layout.gridx = 1;
-        layout.weightx = 3;
+        layout.weightx = 2;
         visualisatiePanel = new VisualisatiePanel(componenten);
         add(visualisatiePanel, layout);
 

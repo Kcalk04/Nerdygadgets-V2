@@ -15,7 +15,7 @@ import java.util.ArrayList;
             this.componenten = geselecteerdeComponenten;
             setBackground(Color.white);
 
-            setPreferredSize(new Dimension(0, 0));
+            setPreferredSize(new Dimension(380, 720));
             setLayout(new GridLayout(5, 2));
         }
 
@@ -118,17 +118,17 @@ import java.util.ArrayList;
                 }
                 revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
 
-
                 JButton verwijderButton = new JButton("Verwijder alles");
-                verwijderButton.setLocation(200, 200);
                 verwijderButton.setFocusable(false);
                 add(verwijderButton);
+
                 verwijderButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                         if (input == JOptionPane.YES_OPTION) {
                             removeAll();
+                            revalidate();
                             repaint();
                             componenten.clear();
                             totaleKosten = 0.0;

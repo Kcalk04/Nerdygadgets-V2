@@ -12,7 +12,7 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         super(componenten);
 
         setBackground(Color.lightGray);
-        setPreferredSize(new Dimension(0, 0));
+//        setPreferredSize(new Dimension(260, 720));
         setLayout(new GridLayout(5, 2));
 
         catalogusComponenten = new ArrayList<>();
@@ -98,7 +98,11 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
             // Maak de popup menu aan
             JPopupMenu popupMenu = new JPopupMenu();
             jmiToevoegen = new JMenuItem("Toevoegen");
-            jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
+            if(componenten.size() >= 12) {
+                jmiToevoegen.setEnabled(false);
+            } else {
+                jmiToevoegen.addActionListener(SimulatieFrame.catalogusPanel);
+            }
 
             JLabel clickedLabel = (JLabel) e.getComponent(); // Haal de geklikte label op
             String imageId = clickedLabel.getName(); // Haal de bijbehorende ID bij het label op
