@@ -89,11 +89,14 @@ public class VisualisatiePanel extends Panel implements ActionListener, MouseLis
                     // Het aanmaken van een panel zodat alle gegevens van een component bij elkaar blijft
                     JPanel component = new JPanel();
                     component.setLayout(new GridBagLayout());
+                    component.setPreferredSize(new Dimension(100,100));
 
                     GridBagConstraints layout = new GridBagConstraints();
 
-                    // Zorgt ervoor dat de componenten in een vierkant blijven en niet strekken
+//                     Zorgt ervoor dat de componenten in een vierkant blijven en niet strekken
                     layout.fill = GridBagConstraints.NONE;
+                    layout.weightx = 0;
+                    layout.weighty = 0;
 
                     // Zorgt ervoor dat elk label onder elkaar komt (gridy gaat steeds 1 omhoog)
                     layout.gridx = 0;
@@ -102,12 +105,13 @@ public class VisualisatiePanel extends Panel implements ActionListener, MouseLis
                     JLabel jlAfbeelding = new JLabel(componenten.get(i).getAfbeelding());
                     jlAfbeelding.setName(String.valueOf(i)); // Set a unique ID for the label
                     jlAfbeelding.addMouseListener(this);
-                    component.add(jlAfbeelding);
+                    component.add(jlAfbeelding, layout);
 
                     layout.gridy = 1;
                     JLabel jlNaam = new JLabel(componenten.get(i).getNaam());
+                    jlNaam.setOpaque(true);
                     component.add(jlNaam, layout);
-
+//
                     layout.gridy = 2;
                     JLabel jlKosten = new JLabel("€" + componenten.get(i).getKosten());
                     component.add(jlKosten, layout);
