@@ -4,8 +4,8 @@ public class MonitoringTable extends AbstractTableModel {
 
     String[] columnNames = {"Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
-            {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
+            {"Test", "Active" , 24 + "-" + 16.36, "", ""},
+            {"abc", "Active" , 24 + "-" + 16.36, "", ""},
             {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
             {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
             {"Raja", "Active" , 24 + "-" + 16.36, "", ""}
