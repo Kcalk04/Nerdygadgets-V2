@@ -4,6 +4,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.Panel;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LowLevelMonitoringPanel extends Panel {
     private JLabel searchLbl;
@@ -30,11 +32,14 @@ public class LowLevelMonitoringPanel extends Panel {
             public void changedUpdate(DocumentEvent e) {
                 search(searchField.getText());
             }
-            public void search(String str) {
-                if (str.length() == 0) {
+            public void search(String searchValue) {
+                if (searchValue.length() == 0) {
                     sorter.setRowFilter(null);
                 } else {
-                    sorter.setRowFilter(RowFilter.regexFilter(str));
+                    RowFilter<Object, Object> filter = RowFilter.regexFilter(searchValue);
+                    var regex = Pattern.compile(searchValue, Pattern.CASE_INSENSITIVE);
+                    var filter2 = new RegexFilter<Object, Object>(regex);
+                    sorter.setRowFilter(filter2);
                 }
             }
         });
@@ -89,5 +94,63 @@ public class LowLevelMonitoringPanel extends Panel {
         c.gridx = gridX;
         c.gridy = 0;
         return c;
+    }
+    private abstract static class GeneralFilter<M, I> extends RowFilter<M, I> {
+        private int[] columns;
+
+        private static void checkIndices(int[] columns) {
+            for (int i = columns.length - 1; i >= 0; i--) {
+                if (columns[i] < 0) {
+                    throw new IllegalArgumentException("Index must be >= 0");
+                }
+            }
+        }
+        GeneralFilter(int[] columns) {
+            checkIndices(columns);
+            this.columns = columns;
+        }
+
+        @Override
+        public boolean include(Entry<? extends M, ? extends I> value){
+            int count = value.getValueCount();
+            if (columns.length > 0) {
+                for (int i = columns.length - 1; i >= 0; i--) {
+                    int index = columns[i];
+                    if (index < count) {
+                        if (include(value, index)) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                while (--count >= 0) {
+                    if (include(value, count)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        protected abstract boolean include(
+                Entry<? extends M, ? extends I> value, int index);
+    }
+    private static class RegexFilter<M, I> extends GeneralFilter<M, I> {
+        private Matcher matcher;
+
+        RegexFilter(Pattern regex, int... columns) {
+            super(columns);
+            if (regex == null) {
+                throw new IllegalArgumentException("Pattern must be non-null");
+            }
+            matcher = regex.matcher("");
+        }
+
+        @Override
+        protected boolean include(
+                Entry<? extends M, ? extends I> value, int index) {
+            matcher.reset(value.getStringValue(index));
+            return matcher.find();
+        }
     }
 }
