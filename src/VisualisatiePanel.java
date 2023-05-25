@@ -59,10 +59,9 @@ import java.util.ArrayList;
             beschikbaarheidDatabase = 1 - beschikbaarheidDatabase;
 
             totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase) * 100;
-            System.out.println(totaalPercentage);
         }
 
-            public double berekenKosten () {
+            public double[] berekenKosten() {
             kostenPfsense = 0;
             kostenDatabase = 0;
             kostenWeb =  0;
@@ -82,9 +81,8 @@ import java.util.ArrayList;
                         totaleKosten += kostenWeb;
                     }
                 }
-                // Berekenen totale kosten
-                System.out.println(totaleKosten);
-                return totaleKosten;
+                double[] kosten = { kostenPfsense, kostenDatabase, kostenWeb, totaleKosten };
+                return kosten;
             }
 
 

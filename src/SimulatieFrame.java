@@ -27,6 +27,7 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
 
     private JMenuBar menuBar;
     private JMenu menu;
+    private JButton optimaliseer;
     private JMenuItem jmiNieuw;
     private JMenuItem jmiOpslaan;
     private JMenuItem jmiDupliceer;
@@ -90,11 +91,14 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         jmiDupliceer.addActionListener(this);
         jmiLaden.addActionListener(this);
 
+        optimaliseer = new JButton("Optimalisatie");
+
         menu.add(jmiNieuw);
         menu.add(jmiOpslaan);
         menu.add(jmiDupliceer);
         menu.add(jmiLaden);
         menuBar.add(menu);
+        menuBar.add(optimaliseer);
 
         setJMenuBar(menuBar);
 
@@ -120,6 +124,9 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
             } catch (ParseException ex) {
                 throw new RuntimeException(ex);
             }
+        }
+        else if(e.getSource() == optimaliseer) {
+            
         }
     }
 
