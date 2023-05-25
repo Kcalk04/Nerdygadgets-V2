@@ -5,14 +5,16 @@ import java.util.ArrayList;
 
     public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
         double totaleKosten = 0.0;
-        double totaleBeschikbaarheid = 1.0;
         private ArrayList<Component> componenten;
         public JMenuItem jmiVerwijderen;
         public int geselecteerdComponentID;
-
-        double kostenWeb;
-        double kostenPfsense;
-        double kostenDatabase;
+        double kostenPfsense = 0;
+        double kostenDatabase = 0;
+        double kostenWeb = 0;
+        double totaalPercentage = 0;
+        double beschikbaarheidPfsense = 0;
+        double beschikbaarheidWeb = 0;
+        double beschikbaarheidDatabase = 0;
 
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
@@ -21,10 +23,6 @@ import java.util.ArrayList;
 
             setPreferredSize(new Dimension(0, 0));
             setLayout(new GridLayout(5, 2));
-
-            kostenWeb = 0;
-            kostenPfsense = 0;
-            kostenDatabase = 0;
         }
 
         public void voegComponentToe(Component component) {
@@ -34,14 +32,15 @@ import java.util.ArrayList;
 
             berekenKosten();
             berekenBeschikbaarheid();
+            SimulatieFrame.overviewPanel.tekenOverviewPanel();
         }
 
 
-        public void berekenBeschikbaarheid(){
-            double totaalPercentage = 0;
-            double beschikbaarheidPfsense = 1;
-            double beschikbaarheidWeb = 1;
-            double beschikbaarheidDatabase = 1;
+        public void berekenBeschikbaarheid() {
+            totaalPercentage = 0;
+            beschikbaarheidPfsense = 1;
+            beschikbaarheidWeb = 1;
+            beschikbaarheidDatabase = 1;
 
             for (Component component: componenten) {
                 if (component.getType() == ComponentType.PFSENSE) {
@@ -61,28 +60,24 @@ import java.util.ArrayList;
             totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase) * 100;
         }
 
-            public double[] berekenKosten() {
+        public void berekenKosten() {
             kostenPfsense = 0;
             kostenDatabase = 0;
-            kostenWeb =  0;
+            kostenWeb = 0;
             totaleKosten = 0;
 
-                for (Component component : componenten) {
-                    if (component.getType() == ComponentType.PFSENSE) {
-                        kostenPfsense = component.getKosten();
-                        totaleKosten += kostenPfsense;
-                    }
-                    if (component.getType() == ComponentType.DATABASESERVER) {
-                        kostenDatabase = component.getKosten();
-                        totaleKosten += kostenDatabase;
-                    }
-                    if (component.getType() == ComponentType.WEBSERVER) {
-                        kostenWeb = component.getKosten();
-                        totaleKosten += kostenWeb;
-                    }
+            for (Component component : componenten) {
+                if (component.getType() == ComponentType.PFSENSE) {
+                    kostenPfsense += component.getKosten();
                 }
-                double[] kosten = { kostenPfsense, kostenDatabase, kostenWeb, totaleKosten };
-                return kosten;
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    kostenDatabase += component.getKosten();
+                }
+                if (component.getType() == ComponentType.WEBSERVER) {
+                    kostenWeb += component.getKosten();
+                }
+            }
+            totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
             }
 
 
@@ -140,8 +135,20 @@ import java.util.ArrayList;
                         if (input == JOptionPane.YES_OPTION) {
                             removeAll();
                             repaint();
+
                             componenten.clear();
+
+                            kostenPfsense = 0.0;
+                            kostenDatabase = 0.0;
+                            kostenWeb = 0.0;
                             totaleKosten = 0.0;
+
+                            beschikbaarheidPfsense = 0.0;
+                            beschikbaarheidDatabase = 0.0;
+                            beschikbaarheidWeb = 0.0;
+                            totaalPercentage = 0.0;
+
+                            SimulatieFrame.overviewPanel.tekenOverviewPanel();
                         }
                     }
                 });
@@ -157,9 +164,13 @@ import java.util.ArrayList;
                 if (e.getSource() == jmiVerwijderen) {
                     aftrekkenKosten(componenten.get(geselecteerdComponentID));
                     componenten.remove(geselecteerdComponentID);
+
+                    SimulatieFrame.visualisatiePanel.berekenKosten();
+                    SimulatieFrame.visualisatiePanel.berekenBeschikbaarheid();
+                    SimulatieFrame.overviewPanel.tekenOverviewPanel();
+
                     tekenVisualisatiePanel();
                     repaint();
-                    System.out.println(componenten.size());
                 }
             }
 

@@ -73,7 +73,7 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         // grid (x: 5, y: 0)
         layout.gridx = 3;
         layout.weightx = 2;
-        overviewPanel = new OverviewPanel(componenten);
+        overviewPanel = new OverviewPanel(componenten, visualisatiePanel);
         add(overviewPanel, layout);
 
         menu = new JMenu("File");
@@ -138,7 +138,7 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
             SimulatieFrame.visualisatiePanel.removeAll();
             SimulatieFrame.visualisatiePanel.repaint();
             SimulatieFrame.visualisatiePanel.totaleKosten = 0.0;
-            SimulatieFrame.visualisatiePanel.totaleBeschikbaarheid = 1;
+            SimulatieFrame.visualisatiePanel.totaalPercentage = 1;
             componenten.clear();
         }
     }
