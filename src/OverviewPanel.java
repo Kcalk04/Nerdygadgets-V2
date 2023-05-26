@@ -1,7 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class OverviewPanel extends Panel {
@@ -48,8 +52,15 @@ public class OverviewPanel extends Panel {
             component.add(jlAfbeelding);
 
             layout.gridy = 1;
-            JLabel jlNaam = new JLabel("Aantal " + componentenOverzicht.get(i).getNaam());
-            component.add(jlNaam, layout);
+            JLabel jlAantal = new JLabel();
+            if (componentenOverzicht.get(i).getType().equals(ComponentType.PFSENSE)) {
+                jlAantal = new JLabel("Aantal: " + SimulatieFrame.visualisatiePanel.aantalPfsense);
+            } else if (componentenOverzicht.get(i).getType().equals(ComponentType.DATABASESERVER)) {
+                jlAantal = new JLabel("Aantal: " + SimulatieFrame.visualisatiePanel.aantalDatabase);
+            } else if (componentenOverzicht.get(i).getType().equals(ComponentType.WEBSERVER)) {
+                jlAantal = new JLabel("Aantal: " + SimulatieFrame.visualisatiePanel.aantalWeb);
+            }
+            component.add(jlAantal, layout);
 
 
             layout.gridy = 2;
@@ -80,7 +91,62 @@ public class OverviewPanel extends Panel {
             add(component);
 
         }
-        revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
+        // Maak nieuw panel aan voor 4e rij voor totalen
+        JPanel totaalPanel = new JPanel();
+        totaalPanel.setLayout(new GridBagLayout());
+        totaalPanel.setBackground(Color.lightGray);
+        Border border = new LineBorder(Color.BLACK, 2, false);
+        totaalPanel.setBorder(border);
+
+        // Grid bag constraints voor 4e rij
+        GridBagConstraints layout = new GridBagConstraints();
+        layout.fill = GridBagConstraints.NONE;
+        layout.gridy = 0;
+
+        // Rond het beschikbaarheidspercentage op 4 decimalen én naar beneden af
+        double totaleBeschikbaarheidNietAfgerond = SimulatieFrame.visualisatiePanel.totaalPercentage;
+        DecimalFormat decimalFormat = new DecimalFormat("#.0000");
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        String totaleBeschikbaarheidAfgerond = decimalFormat.format(totaleBeschikbaarheidNietAfgerond);
+
+
+        // Voeg labels toe
+        JLabel totaalAantalLabel = new JLabel("Totaal aantal machines: " + SimulatieFrame.visualisatiePanel.totaalAantal);
+        JLabel totaleKostenLabel = new JLabel("Totale kosten: €" + SimulatieFrame.visualisatiePanel.totaleKosten);
+
+        // Check of beschikbaarheid 0.0 is, dan 0.0 aanhouden, anders afgeronde percentage laten zien
+        JLabel totaleBeschikbaarheidLabel;
+        JLabel waarschuwingLabel1;
+        JLabel waarschuwingLabel2;
+        JLabel witregelLabel = new JLabel(" ");
+        if(SimulatieFrame.visualisatiePanel.totaalPercentage == 0.0) {
+            totaleBeschikbaarheidLabel = new JLabel("Totale beschikbaarheid: 00,0000" + "%");
+            waarschuwingLabel1 = new JLabel("Voeg minimaal één van elk type toe");
+            waarschuwingLabel2 = new JLabel("om beschikbaarheid te zien");
+        } else {
+            totaleBeschikbaarheidLabel = new JLabel("Totale beschikbaarheid: " + totaleBeschikbaarheidAfgerond + "%");
+            waarschuwingLabel1 = new JLabel("");
+            waarschuwingLabel2 = new JLabel("");
+        }
+        totaalPanel.add(totaalAantalLabel, layout);
+        layout.gridy++;
+        totaalPanel.add(totaleKostenLabel, layout);
+        layout.gridy++;
+        totaalPanel.add(totaleBeschikbaarheidLabel, layout);
+        layout.gridy++;
+        totaalPanel.add(witregelLabel, layout);
+        layout.gridy++;
+        waarschuwingLabel1.setForeground(Color.RED);
+        waarschuwingLabel2.setForeground(Color.RED);
+        totaalPanel.add(waarschuwingLabel1, layout);
+
+        layout.gridy++;
+        totaalPanel.add(waarschuwingLabel2, layout);
+
+        // Toevoegen 4e rij panel aan main panel
+        add(totaalPanel);
+
+        revalidate(); // Herlaad het panel
 
     }
 }

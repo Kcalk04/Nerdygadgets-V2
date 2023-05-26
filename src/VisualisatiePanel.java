@@ -15,6 +15,10 @@ import java.util.ArrayList;
         double beschikbaarheidPfsense = 0;
         double beschikbaarheidWeb = 0;
         double beschikbaarheidDatabase = 0;
+        int aantalPfsense = 0;
+        int aantalDatabase = 0;
+        int aantalWeb = 0;
+        int totaalAantal = 0;
 
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
@@ -32,6 +36,7 @@ import java.util.ArrayList;
 
             berekenKosten();
             berekenBeschikbaarheid();
+            berekenAantal();
             SimulatieFrame.overviewPanel.tekenOverviewPanel();
         }
 
@@ -79,6 +84,43 @@ import java.util.ArrayList;
             }
             totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
             }
+
+        public void berekenAantal() {
+            aantalPfsense = 0;
+            aantalDatabase = 0;
+            aantalWeb = 0;
+            totaalAantal = 0;
+
+            for (Component component : componenten) {
+                if (component.getType() == ComponentType.PFSENSE) {
+                    aantalPfsense ++;
+                }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    aantalDatabase++;
+                }
+                if (component.getType() == ComponentType.WEBSERVER) {
+                    aantalWeb++;
+                }
+            }
+            totaalAantal = aantalPfsense + aantalDatabase + aantalWeb;
+        }
+
+        public void clearAlleWaardes() {
+            kostenPfsense = 0.0;
+            kostenDatabase = 0.0;
+            kostenWeb = 0.0;
+            totaleKosten = 0.0;
+
+            beschikbaarheidPfsense = 0.0;
+            beschikbaarheidDatabase = 0.0;
+            beschikbaarheidWeb = 0.0;
+            totaalPercentage = 0.0;
+
+            aantalPfsense = 0;
+            aantalDatabase = 0;
+            aantalWeb = 0;
+            totaalAantal = 0;
+        }
 
 
             // Deze functie tekent alle componenten binnen de catalogus en zorgt ervoor dat het rechtermuisknopmenu werkt
@@ -137,17 +179,7 @@ import java.util.ArrayList;
                             repaint();
 
                             componenten.clear();
-
-                            kostenPfsense = 0.0;
-                            kostenDatabase = 0.0;
-                            kostenWeb = 0.0;
-                            totaleKosten = 0.0;
-
-                            beschikbaarheidPfsense = 0.0;
-                            beschikbaarheidDatabase = 0.0;
-                            beschikbaarheidWeb = 0.0;
-                            totaalPercentage = 0.0;
-
+                            clearAlleWaardes();
                             SimulatieFrame.overviewPanel.tekenOverviewPanel();
                         }
                     }
@@ -167,6 +199,7 @@ import java.util.ArrayList;
 
                     SimulatieFrame.visualisatiePanel.berekenKosten();
                     SimulatieFrame.visualisatiePanel.berekenBeschikbaarheid();
+                    SimulatieFrame.visualisatiePanel.berekenAantal();
                     SimulatieFrame.overviewPanel.tekenOverviewPanel();
 
                     tekenVisualisatiePanel();
