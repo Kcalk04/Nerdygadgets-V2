@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.*;
 
 public class NieuwComponentDialog extends JDialog {
     private JTextField JtNaam;
@@ -37,14 +38,24 @@ public class NieuwComponentDialog extends JDialog {
 
         okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String naamNieuwComponent = JtNaam.getText();
-                String prijsNieuwComponent = JtPrijs.getText();
-                String beschikbaarheidNieuwComponent = JtBeschikbaarheid.getText();
-                boolean typePfsenseSelected = typePfsense.isSelected();
-                boolean typeDatabaseSelected = typeDatabase.isSelected();
-                boolean typeWebSelected = typeWeb.isSelected();
+                String typeComponent = "";
 
-                dispose();
+                if(typePfsense.isSelected()) {
+                    typeComponent = "pfsense";
+                }
+                if(typeDatabase.isSelected()) {
+                    typeComponent = "databaseserver";
+                }
+                if(typeWeb.isSelected()) {
+                    typeComponent = "webserver";
+                }
+
+                String naam = JtNaam.getText();;
+                double prijs = Double.parseDouble(JtNaam.getText());
+                double beschikbaarheid = Double.parseDouble(JtBeschikbaarheid.getText());
+                String type = typeComponent;
+
+                Database.insertData(naam, prijs, beschikbaarheid, type);
             }
         });
 
