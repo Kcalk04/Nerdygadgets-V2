@@ -51,7 +51,7 @@ public class NieuwComponentDialog extends JDialog {
                 }
 
                 String naam = JtNaam.getText();;
-                double prijs = Double.parseDouble(JtNaam.getText());
+                double prijs = Double.parseDouble(JtPrijs.getText());
                 double beschikbaarheid = Double.parseDouble(JtBeschikbaarheid.getText());
                 String type = typeComponent;
 

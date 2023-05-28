@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     private static Connection getConnection() throws SQLException {
@@ -23,6 +24,28 @@ public class Database {
             }
         } catch (SQLException e) {
             System.out.println("Error bij opslaan data: " + e.getMessage());
+        }
+    }
+
+    public static void haalComponentenOp(ArrayList<Component> catalogusComponenten) {
+        try (Connection connection = getConnection()) {
+            String sql = "SELECT * FROM Component";
+
+            try (PreparedStatement statement = connection.prepareStatement(sql);
+                 ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    String naam  = resultSet.getString("naam");
+                    double prijs = resultSet.getDouble("prijs");
+                    double beschikbaarheid = resultSet.getDouble("beschikbaarheid");
+                    ComponentType type = ComponentType.valueOf(resultSet.getString("type"));
+
+                    Component component = new Component(naam, prijs, beschikbaarheid, type);
+                    catalogusComponenten.add(component);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving data: " + e.getMessage());
         }
     }
 
