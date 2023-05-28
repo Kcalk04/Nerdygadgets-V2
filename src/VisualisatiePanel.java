@@ -34,6 +34,7 @@ import java.util.ArrayList;
             componenten.add(component);
             tekenVisualisatiePanel();
 
+            // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
             berekenKosten();
             berekenBeschikbaarheid();
             berekenAantal();
@@ -42,11 +43,13 @@ import java.util.ArrayList;
 
 
         public void berekenBeschikbaarheid() {
+            // Zet variabalen op 0 en 1
             totaalPercentage = 0;
             beschikbaarheidPfsense = 1;
             beschikbaarheidWeb = 1;
             beschikbaarheidDatabase = 1;
 
+            // Loop door de componenten heen en bereken voor elk ComponentType apart de beschikbaarheid
             for (Component component: componenten) {
                 if (component.getType() == ComponentType.PFSENSE) {
                     beschikbaarheidPfsense *= (1 - (component.getBeschikbaarheid() / 100));
@@ -58,19 +61,23 @@ import java.util.ArrayList;
                     beschikbaarheidDatabase *= (1 - (component.getBeschikbaarheid() / 100));
                 }
             }
+            // Herschrijf de beschikbaarheid om het op te kunnen tellen
             beschikbaarheidPfsense = 1 - beschikbaarheidPfsense;
             beschikbaarheidWeb = 1 - beschikbaarheidWeb;
             beschikbaarheidDatabase = 1 - beschikbaarheidDatabase;
 
+            // Berekenen totaalpercentage
             totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase) * 100;
         }
 
         public void berekenKosten() {
+            // Zet variabelen op 0
             kostenPfsense = 0;
             kostenDatabase = 0;
             kostenWeb = 0;
             totaleKosten = 0;
 
+            // Loop door de componenten heen en bereken voor elk ComponentType apart de kosten
             for (Component component : componenten) {
                 if (component.getType() == ComponentType.PFSENSE) {
                     kostenPfsense += component.getKosten();
@@ -82,16 +89,19 @@ import java.util.ArrayList;
                     kostenWeb += component.getKosten();
                 }
             }
+            // Tel de kosten bij elkaar op
             totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
             }
 
         public void berekenAantal() {
+            // Zet variabelen op 0
             aantalPfsense = 0;
             aantalDatabase = 0;
             aantalWeb = 0;
             totaalAantal = 0;
 
             for (Component component : componenten) {
+                // Loop door de componenten heen en bereken voor elk ComponentType apart het aantal
                 if (component.getType() == ComponentType.PFSENSE) {
                     aantalPfsense ++;
                 }
@@ -102,10 +112,12 @@ import java.util.ArrayList;
                     aantalWeb++;
                 }
             }
+            // Bereken het totaal aantal
             totaalAantal = aantalPfsense + aantalDatabase + aantalWeb;
         }
 
         public void clearAlleWaardes() {
+            // Zet alle waardes op 0
             kostenPfsense = 0.0;
             kostenDatabase = 0.0;
             kostenWeb = 0.0;
@@ -123,7 +135,7 @@ import java.util.ArrayList;
         }
 
 
-            // Deze functie tekent alle componenten binnen de catalogus en zorgt ervoor dat het rechtermuisknopmenu werkt
+            // Deze functie tekent alle componenten binnen de catalogus
             public void tekenVisualisatiePanel () {
                 removeAll(); // Verwijder alle componenten uit het panel voordat je ze opnieuw tekent
 
@@ -166,11 +178,13 @@ import java.util.ArrayList;
                 revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
 
 
+                // Knop om alle componenten te verwijderen
                 JButton verwijderButton = new JButton("Verwijder alles");
                 verwijderButton.setLocation(200, 200);
                 verwijderButton.setFocusable(false);
                 add(verwijderButton);
                 verwijderButton.addActionListener(new ActionListener() {
+                    // ActionListener voor confirmation en het clearen van de panel
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -186,6 +200,7 @@ import java.util.ArrayList;
                 });
             }
             public double aftrekkenKosten (Component component){
+            // Aftrekken kosten wanneer een component verwijderd wordt
                 totaleKosten -= component.getKosten();
                 System.out.println(totaleKosten);
                 return totaleKosten;
@@ -193,6 +208,7 @@ import java.util.ArrayList;
 
             @Override
             public void actionPerformed (ActionEvent e){
+            // Als een individueel component verwijderd wordt worde alle bereken methodes opnieuw aangeroepen om de correcte data te berekenen
                 if (e.getSource() == jmiVerwijderen) {
                     aftrekkenKosten(componenten.get(geselecteerdComponentID));
                     componenten.remove(geselecteerdComponentID);

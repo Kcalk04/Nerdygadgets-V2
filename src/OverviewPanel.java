@@ -16,12 +16,12 @@ public class OverviewPanel extends Panel {
         super(componenten);
         this.visualisatiePanel = visualisatiePanel;
 
+        // Toevoegen componenten voor het overzicht
+        componentenOverzicht = new ArrayList<>();
+
         Component pfsense = new Component("PFSense", ComponentType.PFSENSE);
         Component database = new Component("Databaseserver",ComponentType.DATABASESERVER);
         Component web = new Component("Webserver", ComponentType.WEBSERVER);
-
-        componentenOverzicht = new ArrayList<>();
-
         componentenOverzicht.add(pfsense);
         componentenOverzicht.add(database);
         componentenOverzicht.add(web);
@@ -51,6 +51,7 @@ public class OverviewPanel extends Panel {
             JLabel jlAfbeelding = new JLabel(componentenOverzicht.get(i).getAfbeelding());
             component.add(jlAfbeelding);
 
+            // Voor elk verschillend componentType de aantallen in een label stoppen
             layout.gridy = 1;
             JLabel jlAantal = new JLabel();
             if (componentenOverzicht.get(i).getType().equals(ComponentType.PFSENSE)) {
@@ -62,7 +63,7 @@ public class OverviewPanel extends Panel {
             }
             component.add(jlAantal, layout);
 
-
+            // Voor elk verschillend componentType de kosten in een label stoppen
             layout.gridy = 2;
             JLabel jlKosten = new JLabel();
             if (componentenOverzicht.get(i).getType().equals(ComponentType.PFSENSE)) {
@@ -74,7 +75,7 @@ public class OverviewPanel extends Panel {
             }
             component.add(jlKosten, layout);
 
-
+        // Voor elk verschillend componentType de beschikbaarheid in een label stoppen
             layout.gridy = 3;
             JLabel jlBeschikbaarheid = new JLabel();
             if (componentenOverzicht.get(i).getType().equals(ComponentType.PFSENSE)) {
@@ -85,8 +86,6 @@ public class OverviewPanel extends Panel {
                 jlBeschikbaarheid = new JLabel((SimulatieFrame.visualisatiePanel.beschikbaarheidWeb * 100) + "%");
             }
             component.add(jlBeschikbaarheid, layout);
-            System.out.println(SimulatieFrame.visualisatiePanel.totaalPercentage);
-
             // Het toevoegen van het component
             add(component);
 
@@ -128,6 +127,8 @@ public class OverviewPanel extends Panel {
             waarschuwingLabel1 = new JLabel("");
             waarschuwingLabel2 = new JLabel("");
         }
+
+        // Toevoegen labels aan panel met gridy++ voor de spacing
         totaalPanel.add(totaalAantalLabel, layout);
         layout.gridy++;
         totaalPanel.add(totaleKostenLabel, layout);
@@ -139,7 +140,6 @@ public class OverviewPanel extends Panel {
         waarschuwingLabel1.setForeground(Color.RED);
         waarschuwingLabel2.setForeground(Color.RED);
         totaalPanel.add(waarschuwingLabel1, layout);
-
         layout.gridy++;
         totaalPanel.add(waarschuwingLabel2, layout);
 

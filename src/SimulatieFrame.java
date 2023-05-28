@@ -27,7 +27,9 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
 
     private JMenuBar menuBar;
     private JMenu menu;
-    private JButton optimaliseer;
+    private JMenu options;
+    private JMenuItem jmiOptimaliseer;
+    private JMenuItem jmiNieuwComponent;
     private JMenuItem jmiNieuw;
     private JMenuItem jmiOpslaan;
     private JMenuItem jmiDupliceer;
@@ -77,7 +79,6 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         add(overviewPanel, layout);
 
         menu = new JMenu("File");
-
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
 
@@ -91,15 +92,22 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         jmiDupliceer.addActionListener(this);
         jmiLaden.addActionListener(this);
 
-        optimaliseer = new JButton("Optimalisatie");
-
         menu.add(jmiNieuw);
         menu.add(jmiOpslaan);
         menu.add(jmiDupliceer);
         menu.add(jmiLaden);
         menuBar.add(menu);
-        menuBar.add(optimaliseer);
 
+        options = new JMenu("Options");
+        jmiOptimaliseer = new JMenuItem("Optimalisatie");
+        jmiNieuwComponent = new JMenuItem("Voeg nieuw component toe");
+
+        jmiOptimaliseer.addActionListener(this);
+        jmiNieuwComponent.addActionListener(this);
+
+        options.add(jmiOptimaliseer);
+        options.add(jmiNieuwComponent);
+        menuBar.add(options);
         setJMenuBar(menuBar);
 
         addKeyListener(this);
@@ -125,9 +133,10 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
                 throw new RuntimeException(ex);
             }
         }
-        else if(e.getSource() == optimaliseer) {
-            
+        else if(e.getSource() == jmiNieuwComponent) {
+            nieuwComponent();
         }
+
     }
 
     public void nieuwOntwerp() {
@@ -223,6 +232,22 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
                 System.out.println("Successfully read the file.");
             }
         }
+    }
+
+    public void nieuwComponent() {
+        // Create the dialog
+        JFrame frame = new JFrame();
+        NieuwComponentDialog dialog = new NieuwComponentDialog(frame);
+
+        // Wait for the dialog to close
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                // Handle dialog close event here
+                // ...
+            }
+        });
     }
 
     @Override
