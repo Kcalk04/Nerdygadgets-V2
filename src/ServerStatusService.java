@@ -4,7 +4,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class GetServerStatus {
+public class ServerStatusService {
     public ServerStatus getStatus(){
         var statusString = getStatusString();
         return createServerStatus(statusString);
@@ -28,7 +28,7 @@ public class GetServerStatus {
     private static String getStatusString() {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("localhost:63343/NerdygadgetsV2/vendor/Indexer.php?"))
+                .uri(URI.create("https://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"))
                 .build();
 
         HttpResponse<String> response;
