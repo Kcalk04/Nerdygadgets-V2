@@ -14,7 +14,8 @@ public class LowLevelMonitoringPanel extends Panel {
     private JScrollPane jsp;
     public LowLevelMonitoringPanel() {
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(900, 360));
+        setPreferredSize(new Dimension(900, 720));
+        setBackground(Color.GREEN);
 
 
         JTextField searchField = setupSearchbox();
@@ -52,14 +53,16 @@ public class LowLevelMonitoringPanel extends Panel {
         table.setRowSorter(sorter);
         jsp = new JScrollPane(table);
         jsp.setBorder(null);
+        table.setRowHeight(50);
+        jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jsp.setPreferredSize(table.getPreferredSize());
         var cScrollPane = new GridBagConstraints();
-        cScrollPane.ipady = 50;
+        cScrollPane.ipady = 22;
         cScrollPane.fill = GridBagConstraints.HORIZONTAL;
         cScrollPane.insets = new Insets(10, 20, 0, 20);
         cScrollPane.gridx = 0;
         cScrollPane.gridy = 1;
-        cScrollPane.gridwidth = 3;
+        cScrollPane.gridwidth = 5;
         add(jsp, cScrollPane);
         table.setFillsViewportHeight(true);
 //        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + search, 0));
@@ -69,10 +72,6 @@ public class LowLevelMonitoringPanel extends Panel {
                 // Do nothing, disable selection
             }
         });
-//        JPanel tablePanel = new JPanel(new BorderLayout());
-//        tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
-//        frame.add(tablePanel, BorderLayout.CENTER); // or any other layout
-
     }
 
     private JTextField setupSearchbox() {

@@ -2,13 +2,13 @@ import javax.swing.table.AbstractTableModel;
 
 public class MonitoringTable extends AbstractTableModel {
 
-    String[] columnNames = {"Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
+    String[] columnNames = {"IconType", "Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
-            {"Test", "Active" , 24 + "-" + 16.36, "", ""},
-            {"abc", "Active" , 24 + "-" + 16.36, "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", ""}
+            {"Test", "Active" , 24 + "-" + 16.36, "", "", ""},
+            {"abc", "Active" , 24 + "-" + 16.36, "", "", ""},
+            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""},
+            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""},
+            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""}
     };
 
     @Override
@@ -31,7 +31,7 @@ public class MonitoringTable extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 6;
     }
 
     @Override
