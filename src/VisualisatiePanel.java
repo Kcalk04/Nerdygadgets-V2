@@ -5,10 +5,20 @@ import java.util.ArrayList;
 
     public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
         double totaleKosten = 0.0;
-        double totaleBeschikbaarheid = 1.0;
         private ArrayList<Component> componenten;
         public JMenuItem jmiVerwijderen;
         public int geselecteerdComponentID;
+        double kostenPfsense = 0;
+        double kostenDatabase = 0;
+        double kostenWeb = 0;
+        double totaalPercentage = 0;
+        double beschikbaarheidPfsense = 0;
+        double beschikbaarheidWeb = 0;
+        double beschikbaarheidDatabase = 0;
+        int aantalPfsense = 0;
+        int aantalDatabase = 0;
+        int aantalWeb = 0;
+        int totaalAantal = 0;
 
         public VisualisatiePanel(ArrayList<Component> geselecteerdeComponenten) {
             super(geselecteerdeComponenten);
@@ -24,59 +34,108 @@ import java.util.ArrayList;
             componenten.add(component);
             tekenVisualisatiePanel();
 
-            berekenKosten(component);
+            // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
+            berekenKosten();
             berekenBeschikbaarheid();
+            berekenAantal();
+            SimulatieFrame.overviewPanel.tekenOverviewPanel();
         }
 
 
-        public double berekenBeschikbaarheid() {
+        public void berekenBeschikbaarheid() {
+            // Zet variabalen op 0 en 1
+            totaalPercentage = 0;
+            beschikbaarheidPfsense = 1;
+            beschikbaarheidWeb = 1;
+            beschikbaarheidDatabase = 1;
 
-
-                double beschikbaarheidPfsense = 1;
-                double beschikbaarheidDatabase = 1;
-                double beschikbaarheidWeb = 1;
-
-                for (Component component : componenten) {
-                    // Check welk component er is aangelikt en bereken de beschikbaarheid ervan
-                    if (component.getType() == ComponentType.PFSENSE) {
-                        beschikbaarheidPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-                    }
-                    if (component.getType() == ComponentType.DATABASESERVER) {
-                        beschikbaarheidDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-                    }
-                    if (component.getType() == ComponentType.WEBSERVER) {
-                        beschikbaarheidWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-                    }
-
-                    totaleBeschikbaarheid = (beschikbaarheidPfsense * beschikbaarheidDatabase * beschikbaarheidWeb);
-                    //System.out.println(totaleBeschikbaarheid);
-                }
-
-                return totaleBeschikbaarheid;
-            }
-
-            public double berekenKosten (Component component){
-                double kostenPfsense = 1;
-                double kostenDatabase = 1;
-                double kostenWeb = 1;
+            // Loop door de componenten heen en bereken voor elk ComponentType apart de beschikbaarheid
+            for (Component component: componenten) {
                 if (component.getType() == ComponentType.PFSENSE) {
-                    kostenPfsense = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
-                }
-                if (component.getType() == ComponentType.DATABASESERVER) {
-                    kostenDatabase = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                    beschikbaarheidPfsense *= (1 - (component.getBeschikbaarheid() / 100));
                 }
                 if (component.getType() == ComponentType.WEBSERVER) {
-                    kostenWeb = 1 - Math.pow(1 - (component.getBeschikbaarheid() / 100), componenten.size());
+                    beschikbaarheidWeb *= (1 - (component.getBeschikbaarheid() / 100));
                 }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    beschikbaarheidDatabase *= (1 - (component.getBeschikbaarheid() / 100));
+                }
+            }
+            // Herschrijf de beschikbaarheid om het op te kunnen tellen
+            beschikbaarheidPfsense = 1 - beschikbaarheidPfsense;
+            beschikbaarheidWeb = 1 - beschikbaarheidWeb;
+            beschikbaarheidDatabase = 1 - beschikbaarheidDatabase;
 
-                // Berekenen totale kosten
-                totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
-                //System.out.println(totaleKosten);
-                return totaleKosten;
+            // Berekenen totaalpercentage
+            totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase) * 100;
+        }
+
+        public void berekenKosten() {
+            // Zet variabelen op 0
+            kostenPfsense = 0;
+            kostenDatabase = 0;
+            kostenWeb = 0;
+            totaleKosten = 0;
+
+            // Loop door de componenten heen en bereken voor elk ComponentType apart de kosten
+            for (Component component : componenten) {
+                if (component.getType() == ComponentType.PFSENSE) {
+                    kostenPfsense += component.getKosten();
+                }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    kostenDatabase += component.getKosten();
+                }
+                if (component.getType() == ComponentType.WEBSERVER) {
+                    kostenWeb += component.getKosten();
+                }
+            }
+            // Tel de kosten bij elkaar op
+            totaleKosten = kostenPfsense + kostenDatabase + kostenWeb;
             }
 
+        public void berekenAantal() {
+            // Zet variabelen op 0
+            aantalPfsense = 0;
+            aantalDatabase = 0;
+            aantalWeb = 0;
+            totaalAantal = 0;
 
-            // Deze functie tekent alle componenten binnen de catalogus en zorgt ervoor dat het rechtermuisknopmenu werkt
+            for (Component component : componenten) {
+                // Loop door de componenten heen en bereken voor elk ComponentType apart het aantal
+                if (component.getType() == ComponentType.PFSENSE) {
+                    aantalPfsense ++;
+                }
+                if (component.getType() == ComponentType.DATABASESERVER) {
+                    aantalDatabase++;
+                }
+                if (component.getType() == ComponentType.WEBSERVER) {
+                    aantalWeb++;
+                }
+            }
+            // Bereken het totaal aantal
+            totaalAantal = aantalPfsense + aantalDatabase + aantalWeb;
+        }
+
+        public void clearAlleWaardes() {
+            // Zet alle waardes op 0
+            kostenPfsense = 0.0;
+            kostenDatabase = 0.0;
+            kostenWeb = 0.0;
+            totaleKosten = 0.0;
+
+            beschikbaarheidPfsense = 0.0;
+            beschikbaarheidDatabase = 0.0;
+            beschikbaarheidWeb = 0.0;
+            totaalPercentage = 0.0;
+
+            aantalPfsense = 0;
+            aantalDatabase = 0;
+            aantalWeb = 0;
+            totaalAantal = 0;
+        }
+
+
+            // Deze functie tekent alle componenten binnen de catalogus
             public void tekenVisualisatiePanel () {
                 removeAll(); // Verwijder alle componenten uit het panel voordat je ze opnieuw tekent
 
@@ -119,37 +178,48 @@ import java.util.ArrayList;
                 revalidate(); // Herlaad het panel zodat de nieuwe componenten getoond worden
 
 
+                // Knop om alle componenten te verwijderen
                 JButton verwijderButton = new JButton("Verwijder alles");
                 verwijderButton.setLocation(200, 200);
                 verwijderButton.setFocusable(false);
                 add(verwijderButton);
                 verwijderButton.addActionListener(new ActionListener() {
+                    // ActionListener voor confirmation en het clearen van de panel
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         int input = JOptionPane.showConfirmDialog(null, "Weet je zeker dat je alles wilt verwijderen", "Waarschuwing", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                         if (input == JOptionPane.YES_OPTION) {
                             removeAll();
                             repaint();
+
                             componenten.clear();
-                            totaleKosten = 0.0;
+                            clearAlleWaardes();
+                            SimulatieFrame.overviewPanel.tekenOverviewPanel();
                         }
                     }
                 });
             }
             public double aftrekkenKosten (Component component){
+            // Aftrekken kosten wanneer een component verwijderd wordt
                 totaleKosten -= component.getKosten();
-                //System.out.println(totaleKosten);
+                System.out.println(totaleKosten);
                 return totaleKosten;
             }
 
             @Override
             public void actionPerformed (ActionEvent e){
+            // Als een individueel component verwijderd wordt worde alle bereken methodes opnieuw aangeroepen om de correcte data te berekenen
                 if (e.getSource() == jmiVerwijderen) {
                     aftrekkenKosten(componenten.get(geselecteerdComponentID));
                     componenten.remove(geselecteerdComponentID);
+
+                    SimulatieFrame.visualisatiePanel.berekenKosten();
+                    SimulatieFrame.visualisatiePanel.berekenBeschikbaarheid();
+                    SimulatieFrame.visualisatiePanel.berekenAantal();
+                    SimulatieFrame.overviewPanel.tekenOverviewPanel();
+
                     tekenVisualisatiePanel();
                     repaint();
-                    //System.out.println(componenten.size());
                 }
             }
 

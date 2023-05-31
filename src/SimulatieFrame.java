@@ -27,6 +27,9 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
 
     private JMenuBar menuBar;
     private JMenu menu;
+    private JMenu options;
+    private JMenuItem jmiOptimaliseer;
+    private JMenuItem jmiNieuwComponent;
     private JMenuItem jmiNieuw;
     private JMenuItem jmiOpslaan;
     private JMenuItem jmiDupliceer;
@@ -59,24 +62,23 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         // grid (x: 0, y: 0)
         layout.gridx = 0;
         layout.gridy = 1;
-        layout.weightx = 2;
+        layout.weightx = 3;
         catalogusPanel = new CatalogusPanel(componenten);
         add(catalogusPanel, layout);
 
         // grid (x: 2, y: 0)
         layout.gridx = 1;
-        layout.weightx = 3;
+        layout.weightx = 5;
         visualisatiePanel = new VisualisatiePanel(componenten);
         add(visualisatiePanel, layout);
 
         // grid (x: 5, y: 0)
-        layout.gridx = 3;
+        layout.gridx = 2;
         layout.weightx = 2;
-        overviewPanel = new OverviewPanel(componenten);
+        overviewPanel = new OverviewPanel(componenten, visualisatiePanel);
         add(overviewPanel, layout);
 
         menu = new JMenu("File");
-
         menuBar = new JMenuBar();
         menuBar.setFocusable(false);
 
@@ -96,6 +98,16 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         menu.add(jmiLaden);
         menuBar.add(menu);
 
+        options = new JMenu("Options");
+        jmiOptimaliseer = new JMenuItem("Optimalisatie");
+        jmiNieuwComponent = new JMenuItem("Voeg nieuw component toe");
+
+        jmiOptimaliseer.addActionListener(this);
+        jmiNieuwComponent.addActionListener(this);
+
+        options.add(jmiOptimaliseer);
+        options.add(jmiNieuwComponent);
+        menuBar.add(options);
         setJMenuBar(menuBar);
 
         addKeyListener(this);
@@ -121,6 +133,10 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
                 throw new RuntimeException(ex);
             }
         }
+        else if(e.getSource() == jmiNieuwComponent) {
+            nieuwComponent();
+        }
+
     }
 
     public void nieuwOntwerp() {
@@ -130,8 +146,6 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
             saveFilePath = "";
             SimulatieFrame.visualisatiePanel.removeAll();
             SimulatieFrame.visualisatiePanel.repaint();
-            SimulatieFrame.visualisatiePanel.totaleKosten = 0.0;
-            SimulatieFrame.visualisatiePanel.totaleBeschikbaarheid = 1;
             componenten.clear();
         }
     }
@@ -218,6 +232,22 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
                 System.out.println("Successfully read the file.");
             }
         }
+    }
+
+    public void nieuwComponent() {
+        // Create the dialog
+        JFrame frame = new JFrame();
+        NieuwComponentDialog dialog = new NieuwComponentDialog(frame);
+
+        // Wait for the dialog to close
+        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                // Handle dialog close event here
+                // ...
+            }
+        });
     }
 
     @Override

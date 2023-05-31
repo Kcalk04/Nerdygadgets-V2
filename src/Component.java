@@ -14,6 +14,11 @@ public class Component {
         this.type = type;
     }
 
+    public Component(String naam, ComponentType type) {
+        this.naam = naam;
+        this.type = type;
+    }
+
     public String getNaam() {
         return naam;
     }
