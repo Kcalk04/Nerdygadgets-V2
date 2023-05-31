@@ -4,6 +4,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.Panel;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,9 +21,8 @@ public class LowLevelMonitoringPanel extends Panel {
         setPreferredSize(new Dimension(900, 720));
         setBackground(Color.GREEN);
 
-
         JTextField searchField = setupSearchbox();
-        setupTable();
+        setupTable(owner);
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -48,10 +49,10 @@ public class LowLevelMonitoringPanel extends Panel {
         });
     }
 
-    private void setupTable() {
+    private void setupTable(JFrame owner) {
         table = new JTable();
 
-        MonitoringTable model = createLiveTableModel(table);
+        MonitoringTable model = createLiveTableModel(owner, table);
 
         sorter = new TableRowSorter<>(model);
         table.setModel(model);
@@ -79,13 +80,22 @@ public class LowLevelMonitoringPanel extends Panel {
         });
     }
 
-    private static MonitoringTable createLiveTableModel(JTable table) {
+    private MonitoringTable createLiveTableModel(JFrame owner, JTable table) {
         MonitoringTable model = new MonitoringTable();
 
         ServerStatusTask serverStatusTask = new ServerStatusTask(table, model);
 
+        System.out.println("Start timer");
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(serverStatusTask, 1000, 10000); // schedule the task to run every 10 seconds
+
+        owner.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.out.println("Stopping timer");
+                timer.cancel();
+            }
+        });
 
         return model;
     }
