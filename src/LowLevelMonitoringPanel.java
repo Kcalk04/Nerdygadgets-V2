@@ -60,6 +60,7 @@ public class LowLevelMonitoringPanel extends Panel {
         jsp = new JScrollPane(table);
         jsp.setBorder(null);
         table.setRowHeight(50);
+        table.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
         jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         jsp.setPreferredSize(table.getPreferredSize());
         var cScrollPane = new GridBagConstraints();
