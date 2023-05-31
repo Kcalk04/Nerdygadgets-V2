@@ -4,7 +4,7 @@ class GetServerStatusTest {
 
     @org.junit.jupiter.api.Test
     void createServerStatus() {
-        var statusGetter = new GetServerStatus();
+        var statusGetter = new ServerStatusService();
         var status = statusGetter.createServerStatus("CPU Usage: 19,4%\n" +
                 "Uptime: up 19 hours, 43 minutes\n" +
                 "disk usage:  37%\n" +
@@ -15,7 +15,7 @@ class GetServerStatusTest {
     }
     @org.junit.jupiter.api.Test
     void createServerStatus_otherData() {
-        var statusGetter = new GetServerStatus();
+        var statusGetter = new ServerStatusService();
         var status = statusGetter.createServerStatus("CPU Usage: 23.8%\n" +
                 "Uptime: up 50 hours, 43 minutes\n" +
                 "disk usage:  99%\n" +

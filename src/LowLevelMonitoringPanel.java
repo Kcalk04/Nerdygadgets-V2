@@ -4,6 +4,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.Panel;
+import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,9 +48,12 @@ public class LowLevelMonitoringPanel extends Panel {
     }
 
     private void setupTable() {
-        MonitoringTable model = new MonitoringTable();
+        table = new JTable();
+
+        MonitoringTable model = createLiveTableModel(table);
+
         sorter = new TableRowSorter<>(model);
-        table = new JTable(model);
+        table.setModel(model);
         table.setRowSorter(sorter);
         jsp = new JScrollPane(table);
         jsp.setBorder(null);
@@ -72,6 +76,17 @@ public class LowLevelMonitoringPanel extends Panel {
                 // Do nothing, disable selection
             }
         });
+    }
+
+    private static MonitoringTable createLiveTableModel(JTable table) {
+        MonitoringTable model = new MonitoringTable();
+
+        ServerStatusTask serverStatusTask = new ServerStatusTask(table, model);
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(serverStatusTask, 1000, 10000); // schedule the task to run every 10 seconds
+
+        return model;
     }
 
     private JTextField setupSearchbox() {

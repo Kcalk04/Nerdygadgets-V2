@@ -1,15 +1,33 @@
 import javax.swing.table.AbstractTableModel;
 
 public class MonitoringTable extends AbstractTableModel {
-
-    String[] columnNames = {"IconType", "Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
+    String[] columnNames = {"IconType", "Name", "Status", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
-            {"Test", "Active" , 24 + "-" + 16.36, "", "", ""},
-            {"abc", "Active" , 24 + "-" + 16.36, "", "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""},
-            {"Raja", "Active" , 24 + "-" + 16.36, "", "", ""}
+            {"Test", "Test", "Unknown", "", "", ""},
+            {"abc", "abc", "Unknown", "", "", ""},
+            {"Raja", "Raja", "Unknown", "", "", ""},
+            {"Raja", "Raja", "Unknown", "", "", ""},
+            {"Raja", "Raja", "Unknown", "", "", ""}
     };
+
+    public void getServerStatusi() {
+        ServerStatusService serverStatusService = new ServerStatusService();
+        for (int i = 0; i < rowData.length; i++) {
+            ServerStatus serverStatus = serverStatusService.getStatus();
+            if (serverStatus == null) {
+                rowData[i][2] = "Unavailable";
+                rowData[i][3] = "-";
+                rowData[i][4] = "-";
+                rowData[i][5] = "-";
+                continue;
+            }
+            System.out.println(serverStatus);
+            rowData[i][2] = "Active";
+            rowData[i][3] = serverStatus.upTime;
+            rowData[i][4] = serverStatus.cpuUsage;
+            rowData[i][5] = "" + serverStatus.diskUsage + "%";
+        }
+    }
 
     @Override
     public String getColumnName(int column) {
@@ -23,10 +41,7 @@ public class MonitoringTable extends AbstractTableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        if(columnIndex == 2){
-
-        }
-        return getValueAt(0,columnIndex).getClass();
+        return String.class;
     }
 
     @Override
