@@ -13,7 +13,8 @@ public class LowLevelMonitoringPanel extends Panel {
     private JTable table;
     private TableRowSorter sorter;
     private JScrollPane jsp;
-    public LowLevelMonitoringPanel() {
+
+    public LowLevelMonitoringPanel(JFrame owner) {
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(900, 720));
         setBackground(Color.GREEN);
