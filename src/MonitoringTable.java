@@ -3,17 +3,17 @@ import javax.swing.table.AbstractTableModel;
 public class MonitoringTable extends AbstractTableModel {
     String[] columnNames = {"IconType", "Name", "Status", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
-            {"Test", "Test", "Unknown", "", "", ""},
-            {"abc", "abc", "Unknown", "", "", ""},
-            {"Raja", "Raja", "Unknown", "", "", ""},
-            {"Raja", "Raja", "Unknown", "", "", ""},
-            {"Raja", "Raja", "Unknown", "", "", ""}
+            {"Test", "DB-1", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
+            {"abc", "DB-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
+            {"Raja", "HTTP-1", "Unknown", "", "", "", "http://192.168.178.20/projecten/NerdygadgetsV2/vendor/Indexer.php"},
+            {"Raja", "HTTP-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
+            {"Raja", "pfSense-LB", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"}
     };
 
     public void getServerStatusi() {
         ServerStatusService serverStatusService = new ServerStatusService();
         for (int i = 0; i < rowData.length; i++) {
-            ServerStatus serverStatus = serverStatusService.getStatus();
+            ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
             if (serverStatus == null) {
                 rowData[i][2] = "Unavailable";
                 rowData[i][3] = "-";

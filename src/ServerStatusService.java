@@ -5,8 +5,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class ServerStatusService {
-    public ServerStatus getStatus() {
-        var statusString = getStatusString();
+    public ServerStatus getStatus(String url) {
+        var statusString = getStatusString(url);
         if (statusString == null){
             return null;
         }
@@ -29,11 +29,10 @@ public class ServerStatusService {
         return serverStatus;
     }
 
-    private static String getStatusString() {
+    private static String getStatusString(String url) {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                // TODO: Add host IP/Address here
-                .uri(URI.create("http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"))
+                .uri(URI.create(url))
                 .build();
 
         try {
