@@ -8,7 +8,7 @@ public class MonitoringTable extends AbstractTableModel {
     Object[][] rowData = {
             {"databaseserver", "DB-1", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
             {"databaseserver", "DB-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
-            {"webserver", "HTTP-1", "Unknown", "", "", "", "http://192.168.178.20/projecten/NerdygadgetsV2/vendor/Indexer.php"},
+            {"webserver", "HTTP-1", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
             {"webserver", "HTTP-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
             {"pfsense", "pfSense-LB", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"}
     };

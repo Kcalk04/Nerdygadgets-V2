@@ -51,7 +51,7 @@ public class LowLevelMonitoringPanel extends Panel {
 
     private void setupTable(JFrame owner) {
         table = new JTable();
-
+        table.setPreferredSize(new Dimension(800, 250));
         MonitoringTable model = createLiveTableModel(owner, table);
 
         sorter = new TableRowSorter<>(model);
@@ -69,7 +69,7 @@ public class LowLevelMonitoringPanel extends Panel {
         cScrollPane.insets = new Insets(10, 20, 0, 20);
         cScrollPane.gridx = 0;
         cScrollPane.gridy = 1;
-        cScrollPane.gridwidth = 5;
+        cScrollPane.gridwidth = 7;
         add(jsp, cScrollPane);
         table.setFillsViewportHeight(true);
 //        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + search, 0));
@@ -95,7 +95,7 @@ public class LowLevelMonitoringPanel extends Panel {
             public void windowClosing(WindowEvent e) {
                 System.out.println("Stopping timer");
                 timer.cancel();
-            }
+             }
         });
 
         return model;
