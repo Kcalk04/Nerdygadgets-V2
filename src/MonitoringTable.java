@@ -6,11 +6,11 @@ import java.util.Map;
 public class MonitoringTable extends AbstractTableModel {
     String[] columnNames = {"IconType", "Name", "Status", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
-            {"databaseserver", "DB-1", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
-            {"databaseserver", "DB-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
-            {"webserver", "HTTP-1", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
-            {"webserver", "HTTP-2", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"},
-            {"pfsense", "pfSense-LB", "Unknown", "", "", "", "http://localhost/projecten/NerdygadgetsV2/vendor/Indexer.php"}
+            {"databaseserver", "DB-1", "Unknown", "", "", "", "http://192.168.1.108/Indexer.php"},
+            {"databaseserver", "DB-2", "Unknown", "", "", "", "http://192.168.1.109/Indexer.php"},
+            {"webserver", "HTTP-1", "Unknown", "", "", "", "http://192.168.1.104/Indexer.php"},
+            {"webserver", "HTTP-2", "Unknown", "", "", "", "http://192.168.1.105/Indexer.php"},
+            {"pfsense", "pfSense-LB", "Unknown", "", "", "", "http://145.44.235.112/Indexer.php"}
     };
 
     private static final Map<String, ImageIcon> IMAGES = new HashMap<>();
