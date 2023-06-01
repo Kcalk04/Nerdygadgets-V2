@@ -56,6 +56,11 @@ public class NieuwComponentDialog extends JDialog {
                 String type = typeComponent;
 
                 Database.insertData(naam, prijs, beschikbaarheid, type);
+
+                int input = JOptionPane.showOptionDialog(null, "Component toegevoegd!", "Succes!", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[] {"Ok"}, "Ok");
+                if(input == JOptionPane.YES_OPTION) {
+                    dispose();
+                }
             }
         });
 
@@ -88,9 +93,7 @@ public class NieuwComponentDialog extends JDialog {
         panel.add(new JLabel("Beschikbaarheid component: "));
         panel.add(JtBeschikbaarheid);
         panel.add(typePfsense);
-//        panel.add(new JLabel("Databaseserver"));
         panel.add(typeDatabase);
-//        panel.add(new JLabel("Webserver"));
         panel.add(typeWeb);
         panel.add(new JLabel(" "));
 
