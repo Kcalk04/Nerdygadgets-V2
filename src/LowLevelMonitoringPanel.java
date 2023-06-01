@@ -72,7 +72,6 @@ public class LowLevelMonitoringPanel extends Panel {
         cScrollPane.gridwidth = 7;
         add(jsp, cScrollPane);
         table.setFillsViewportHeight(true);
-//        sorter.setRowFilter(RowFilter.regexFilter("(?i)" + search, 0));
         table.setSelectionModel(new DefaultListSelectionModel() {
             @Override
             public void setSelectionInterval(int index0, int index1) {
