@@ -38,10 +38,9 @@ public class Database {
                     String naam  = resultSet.getString("naam");
                     double prijs = resultSet.getDouble("prijs");
                     double beschikbaarheid = resultSet.getDouble("beschikbaarheid");
-                    ComponentType type = ComponentType.valueOf(resultSet.getString("type"));
 
-                    Component component = new Component(naam, prijs, beschikbaarheid, type);
-                    catalogusComponenten.add(component);
+////                    Component component = new Component(naam, prijs, beschikbaarheid, );
+//                    catalogusComponenten.add(component);
                 }
             }
         } catch (SQLException e) {
