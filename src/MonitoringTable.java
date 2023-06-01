@@ -2,6 +2,8 @@ import javax.swing.table.AbstractTableModel;
 
 public class MonitoringTable extends AbstractTableModel {
 
+
+
     String[] columnNames = {"Name", "Activity", "Uptime", "Cpu usage", "Disk usage"};
     Object[][] rowData = {
             {"Raja", "Active" , 24 + "-" + 16.36, "", ""},
