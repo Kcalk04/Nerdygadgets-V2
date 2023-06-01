@@ -18,6 +18,25 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         setLayout(new GridLayout(5, 2));
 
         catalogusComponenten = new ArrayList<>();
+        // Het initialiseren van de verschillende componenten
+        Component pfsense = new Component("pfSense", 4000, 99.998, ComponentType.PFSENSE);
+        Component mySQL1 = new Component("HAL9001DB", 5100, 90, ComponentType.DATABASESERVER);
+        Component mySQL2 = new Component("HAL9002DB", 7700, 95, ComponentType.DATABASESERVER);
+        Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
+        Component apacheServer1 = new Component("HAL9001W", 2200, 80, ComponentType.WEBSERVER);
+        Component apacheServer2 = new Component("HAL9002W", 3200, 90, ComponentType.WEBSERVER);
+        Component apacheServer3 = new Component("HAL9003W", 5100, 95, ComponentType.WEBSERVER);
+
+
+        // Het toevoegen van de componenten aan de catelogus
+        catalogusComponenten.add(pfsense);
+        catalogusComponenten.add(apacheServer1);
+        catalogusComponenten.add(apacheServer2);
+        catalogusComponenten.add(apacheServer3);
+        catalogusComponenten.add(mySQL1);
+        catalogusComponenten.add(mySQL2);
+        catalogusComponenten.add(mySQL3);
+
         Database.haalComponentenOp(catalogusComponenten);
         tekenCatelogus();
     }
