@@ -147,6 +147,11 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
             SimulatieFrame.visualisatiePanel.removeAll();
             SimulatieFrame.visualisatiePanel.repaint();
             componenten.clear();
+
+            SimulatieFrame.visualisatiePanel.clearAlleWaardes();
+            SimulatieFrame.overviewPanel.repaint();
+            SimulatieFrame.overviewPanel.revalidate();
+            repaint();
         }
     }
 
@@ -244,8 +249,6 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                // Handle dialog close event here
-                // ...
             }
         });
     }
@@ -288,6 +291,9 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
         if(ctrlKeyPressed && nKeyPressed) {
             releasePressedKeys();
             nieuwOntwerp();
+            SimulatieFrame.overviewPanel.repaint();
+            SimulatieFrame.visualisatiePanel.clearAlleWaardes();
+            repaint();
         }
         if(ctrlKeyPressed && !shiftKeyPressed && sKeyPressed) {
             releasePressedKeys();

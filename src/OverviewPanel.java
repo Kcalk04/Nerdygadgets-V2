@@ -90,6 +90,8 @@ public class OverviewPanel extends Panel {
             add(component);
 
         }
+        revalidate();
+
         // Maak nieuw panel aan voor 4e rij voor totalen
         JPanel totaalPanel = new JPanel();
         totaalPanel.setLayout(new GridBagLayout());
