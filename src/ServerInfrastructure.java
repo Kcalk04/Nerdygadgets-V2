@@ -5,12 +5,6 @@ import java.text.DecimalFormat;
 
 
 class ServerInfrastructure {
-    public static void main(String[] args) {
-
-        ServerInfrastructure infrastructure = new ServerInfrastructure(88.2, 100000);
-        System.out.println("aantalKeer: " + aantalKeer);
-    }
-
 
     private ArrayList<Component> huidigeComponenten;
 
@@ -20,37 +14,21 @@ class ServerInfrastructure {
     private double minCost = maximumCost;
     private ArrayList<Component> optimalInfrastructure;
 
+    ArrayList<Component> firewalls;
+    ArrayList<Component> webServers;
+    ArrayList<Component> dbServers;
+
     public ServerInfrastructure(double beschikbaarheid, double kosten) {
         this.totaalPercentage = beschikbaarheid / 100;
-        System.out.println(totaalPercentage);
         this.maximumCost = kosten;
         this.minCost = maximumCost;
         this.optimalInfrastructure = null;
 
-        huidigeComponenten = new ArrayList<>();
+        huidigeComponenten = SimulatieFrame.catalogusPanel.catalogusComponenten;
 
-        // Het initialiseren van de verschillende componenten
-        Component pfsenseee = new Component("pfSense", 4000, 99.998, ComponentType.PFSENSE);
-        Component mySQL1 = new Component("HAL9001DB", 5100, 90, ComponentType.DATABASESERVER);
-        Component mySQL2 = new Component("HAL9002DB", 7700, 95, ComponentType.DATABASESERVER);
-        Component mySQL3 = new Component("HAL9003DB", 12200, 98, ComponentType.DATABASESERVER);
-        Component apacheServer1 = new Component("HAL9001W", 2200, 80, ComponentType.WEBSERVER);
-        Component apacheServer2 = new Component("HAL9002W", 3200, 90, ComponentType.WEBSERVER);
-        Component apacheServer3 = new Component("HAL9003W", 5100, 95, ComponentType.WEBSERVER);
-
-
-        // Het toevoegen van de componenten aan de catelogus
-        huidigeComponenten.add(pfsenseee);
-        huidigeComponenten.add(apacheServer1);
-        huidigeComponenten.add(apacheServer2);
-        huidigeComponenten.add(apacheServer3);
-        huidigeComponenten.add(mySQL1);
-        huidigeComponenten.add(mySQL2);
-        huidigeComponenten.add(mySQL3);
-
-        ArrayList<Component> firewalls = new ArrayList<>();
-        ArrayList<Component> webServers = new ArrayList<>();
-        ArrayList<Component> dbServers = new ArrayList<>();
+        firewalls = new ArrayList<>();
+        webServers = new ArrayList<>();
+        dbServers = new ArrayList<>();
 
         for (Component component : huidigeComponenten) {
             if (component.getType() == ComponentType.PFSENSE) {
@@ -60,9 +38,7 @@ class ServerInfrastructure {
             } else if (component.getType() == ComponentType.DATABASESERVER) {
                 dbServers.add(component);
             }
-
         }
-        findCheapestInfrastructure(0, 0, 0, 0, new ArrayList<>(), firewalls, webServers, dbServers, 0, 0);
 
         if (optimalInfrastructure == null) {
             System.out.println("No valid infrastructure found!");
@@ -76,23 +52,30 @@ class ServerInfrastructure {
 
     }
 
-    private void findCheapestInfrastructure(int firewallsUsed, int webServersUsed, int dbServersUsed, double totalCost, ArrayList<Component> selectedServers,
-                                            ArrayList<Component> firewalls, ArrayList<Component> webServers, ArrayList<Component> dbServers, int webServerIndex, int dbServerIndex) {
+    public ArrayList<Component> findCheapestInfrastructure(int firewallsUsed, int webServersUsed, int dbServersUsed, double totalCost) {
+        return findCheapestInfrastructure(firewallsUsed, webServersUsed, dbServersUsed, totalCost, new ArrayList<>(), firewalls, webServers, dbServers, 0, 0);
+    }
+
+    private ArrayList<Component> findCheapestInfrastructure(int firewallsUsed, int webServersUsed, int dbServersUsed, double totalCost, ArrayList<Component> selectedServers,
+                                                            ArrayList<Component> firewalls, ArrayList<Component> webServers, ArrayList<Component> dbServers, int webServerIndex, int dbServerIndex) {
         aantalKeer++;
 
         if (selectedServers.size() > 0) {
             double beschikbaarheid = berekenBeschikbaarheid(selectedServers);
 
-            int beschikbaarheid2 = (int)(beschikbaarheid * 1000);
-            int totaalPercentage2 = (int)(totaalPercentage * 1000);
+            int beschikbaarheid2 = (int) (beschikbaarheid * 1000);
+            int totaalPercentage2 = (int) (totaalPercentage * 1000);
 
             if (totalCost > minCost || beschikbaarheid2 > totaalPercentage2) {
+                System.out.println(selectedServers.size());
+                ArrayList<Component> nieuweServers = new ArrayList<>();
                 for (Component component : selectedServers) {
-                    System.out.println(component.getNaam());
+                    nieuweServers.add(component);
                 }
-                return;
+                return nieuweServers;
+            }
         }
-    }
+
         // Try adding a firewall
 //        for (Component component : firewalls) {
 //            selectedServers.add(component);
@@ -110,7 +93,7 @@ class ServerInfrastructure {
                     totalCost + webServer.getKosten(), selectedServers, firewalls, webServers, dbServers,
                     i + 1, dbServerIndex); // Increment the index here
             selectedServers.remove(selectedServers.size() - 1); // Backtrack by removing the last added web server
-            return;
+            return selectedServers;
         }
 
         // Try adding a database server
@@ -121,7 +104,7 @@ class ServerInfrastructure {
                     totalCost + dbServer.getKosten(), selectedServers, firewalls, webServers, dbServers,
                     webServerIndex, i + 1); // Increment the index here
             selectedServers.remove(selectedServers.size() - 1); // Backtrack by removing the last added database server
-            return;
+            return selectedServers;
         }
 
 
@@ -134,6 +117,8 @@ class ServerInfrastructure {
                 optimalInfrastructure = new ArrayList<>(selectedServers);
             }
         }
+
+        return null;
     }
 
     public static double berekenBeschikbaarheid(ArrayList<Component> selectedServers) {
