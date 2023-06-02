@@ -37,11 +37,13 @@ public class ServerStatusService {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Response code: " + response.statusCode());
-            System.out.println("Page content: \n" + response.body());
-            if (response.statusCode() != 200) {
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                System.out.println("HTTP request failed with status code: " + statusCode);
                 return null;
             }
+            System.out.println("Response code: " + statusCode);
+            System.out.println("Page content: \n" + response.body());
             return response.body();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
