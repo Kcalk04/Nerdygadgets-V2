@@ -18,7 +18,7 @@ public class backTrackingAlg {
         private boolean forceStop = false;
 
         public backTrackingAlg(ArrayList<Component> componenten) {
-                super()
+                super();
                 componenten = SimulatieFrame.catalogusPanel.catalogusComponenten;
                 componentDB = new ArrayList<>();
                 componentWEB = new ArrayList<>();
