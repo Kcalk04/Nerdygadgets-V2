@@ -61,6 +61,10 @@ public class NieuwComponentDialog extends JDialog {
 
                 int input = JOptionPane.showOptionDialog(null, "Component toegevoegd!", "Succes!", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[] {"Ok"}, "Ok");
                 if(input == JOptionPane.YES_OPTION) {
+                    SimulatieFrame.visualisatiePanel.berekenKosten();
+                    SimulatieFrame.visualisatiePanel.berekenBeschikbaarheid();
+                    SimulatieFrame.visualisatiePanel.berekenAantal();
+                    SimulatieFrame.overviewPanel.tekenOverviewPanel();
                     dispose();
                 }
             }

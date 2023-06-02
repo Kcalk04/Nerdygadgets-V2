@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
     public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
+        private Algoritme algoritme;
         double totaleKosten = 0.0;
         private ArrayList<Component> componenten;
         public JMenuItem jmiVerwijderen;
@@ -28,6 +29,16 @@ import java.util.ArrayList;
             setPreferredSize(new Dimension(0, 0));
             setLayout(new GridLayout(5, 2));
         }
+
+        public void transferDataFromOptimaalOntwerp(ArrayList<Component> optimaalOntwerp) {
+            componenten.clear(); // Clear the existing components
+
+            for (Component component : optimaalOntwerp) {
+                componenten.add(component); // Add each component from optimaalOntwerp to componenten
+            }
+        }
+
+
 
         public void voegComponentToe(Component component) {
             // Toevoegen componenten

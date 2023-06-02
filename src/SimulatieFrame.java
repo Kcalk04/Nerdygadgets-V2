@@ -153,9 +153,10 @@ public class SimulatieFrame extends JDialog implements ActionListener, KeyListen
             SimulatieFrame.visualisatiePanel.repaint();
             componenten.clear();
 
-            SimulatieFrame.visualisatiePanel.clearAlleWaardes();
-            SimulatieFrame.overviewPanel.repaint();
-            SimulatieFrame.overviewPanel.revalidate();
+            SimulatieFrame.visualisatiePanel.berekenKosten();
+            SimulatieFrame.visualisatiePanel.berekenBeschikbaarheid();
+            SimulatieFrame.visualisatiePanel.berekenAantal();
+            SimulatieFrame.overviewPanel.tekenOverviewPanel();
             repaint();
         }
     }

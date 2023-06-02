@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class OptimalisatieDialog extends JDialog implements ActionListener {
-    private JTextField sizeTextField;
+    private JTextField jtfBeschikbaarheidInput;
     public JButton Bereken;
-    private static double beschikbaarheid;
+    private static double inputBeschikbaarheid;
 
     public OptimalisatieDialog(JFrame parent) {
         super(parent, "Nieuw component toevoegen", true);
@@ -15,14 +15,14 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
         setLayout(new FlowLayout());
 
         JLabel sizeLabel = new JLabel("Beschikbaarheid:");
-        sizeTextField = new JTextField(12);
+        jtfBeschikbaarheidInput = new JTextField(12);
 
         Bereken = new JButton("Bereken!");
         Bereken.addActionListener(this);
 
 
         add(sizeLabel);
-        add(sizeTextField);
+        add(jtfBeschikbaarheidInput);
         add(new JLabel());
         add(Bereken);
         setVisible(true);
@@ -31,21 +31,19 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == Bereken) {
+            inputBeschikbaarheid = Double.parseDouble(jtfBeschikbaarheidInput.getText());
             optimalisatieTabel();
-            beschikbaarheid = Double.parseDouble(sizeTextField.getText());
-        } else if(e.getSource() != Bereken) {
-            System.out.println("nahhhhhhhhhhhhh");
+            dispose();
         }
     }
     public void optimalisatieTabel() {
         // Create the dialog
         JFrame frame = new JFrame();
-        TabelOptimalisatie Table = new TabelOptimalisatie(frame, sizeTextField.getText());
+        TabelOptimalisatie table = new TabelOptimalisatie(frame, getInputBeschikbaarheid());
         // Wait for the dialog to close
-        Table.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        table.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
-    public static double getGewildeBeschikbaarheid(){
-        return beschikbaarheid;
+    public static double getInputBeschikbaarheid(){
+        return inputBeschikbaarheid;
     }
-
-    }
+}

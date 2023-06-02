@@ -2,36 +2,27 @@ import java.util.ArrayList;
 
 
 class Algoritme {
-    public static void main(String[] args) {
-
-        new Algoritme(99.99, 100000);
-        System.out.println("aantalKeer: " +aantalKeer);
-    }
-
-
     private ArrayList<Component> CatalogusComponenten = new ArrayList<>();
+    private double totaalBeschikbaarheidsPercentage;
+    private double maximaleKosten;
+    private double minimaleKosten = maximaleKosten;
+    public ArrayList<Component> optimaalOntwerp;
 
-    private static int aantalKeer;
-    private static final int MAX_FIREWALLS = 2;
-    private static final int MAX_WEB_SERVERS = 5;
-    private static final int MAX_DB_SERVERS = 5;
 
-
-    private static double totalAvailabilityPercentage;
-    private static double maximumCost;
-
-    private static double minCost = maximumCost;
-    private static ArrayList<Component> optimalInfrastructure;
-
-    public static ArrayList<Component> getOptimalInfrastructure() {
-        return optimalInfrastructure;
+    public ArrayList<Component> getOptimaalOntwerp() {
+        return optimaalOntwerp;
     }
 
+    public Algoritme(double inputBeschikbaarheid, double kosten){
 
-    public Algoritme(double beschikbaarheid, double kosten){
-        this.totalAvailabilityPercentage = beschikbaarheid/100;
-        this.maximumCost = kosten;
-        minCost = maximumCost;
+        inputBeschikbaarheid = OptimalisatieDialog.getInputBeschikbaarheid()/100;
+        this.maximaleKosten = kosten;
+        this.totaalBeschikbaarheidsPercentage = inputBeschikbaarheid;
+        minimaleKosten = maximaleKosten;
+
+        ArrayList<Component> fireWallArrayList = new ArrayList<>();
+        ArrayList<Component> webserverArrayList = new ArrayList<>();
+        ArrayList<Component> databaseserverArrayList = new ArrayList<>();
 
         // Het initialiseren van de verschillende componenten
         Component pfsense = new Component("pfSense", 4000, 99.998, ComponentType.PFSENSE);
@@ -52,142 +43,104 @@ class Algoritme {
         CatalogusComponenten.add(mySQL2);
         CatalogusComponenten.add(mySQL3);
 
-
-        ArrayList<Component> firewalls = new ArrayList<>();
-        ArrayList<Component> webServers = new ArrayList<>();
-        ArrayList<Component> dbServers = new ArrayList<>();
+//        Database.haalComponentenOp(SimulatieFrame.catalogusPanel.catalogusComponenten);
 
         for (Component component : CatalogusComponenten) {
             if(component.getType() == ComponentType.PFSENSE){
-                firewalls.add(component);
+                fireWallArrayList.add(component);
             } else if (component.getType() == ComponentType.WEBSERVER) {
-                webServers.add(component);
+                webserverArrayList.add(component);
             } else if (component.getType() == ComponentType.DATABASESERVER) {
-                dbServers.add(component);
-            }
-
-        }
-        findCheapestInfrastructure(0, 0, 0, 0, new ArrayList<>(), firewalls, webServers, dbServers, 0 ,0);
-
-        if (optimalInfrastructure == null) {
-            System.out.println("No valid infrastructure found!");
-        } else {
-            System.out.println("Cheapest cost: " + minCost);
-            System.out.println("Optimal infrastructure:");
-            for (Component component : optimalInfrastructure) {
-                System.out.println(component.getNaam() + " Server cost: " + component.getKosten() + ", availability: " + component.getBeschikbaarheid());
+                databaseserverArrayList.add(component);
             }
         }
 
+        vindOptimaalOntwerp(0, 0, 0, 0, new ArrayList<>(), fireWallArrayList, webserverArrayList, databaseserverArrayList, 0 ,0);
+
+        if (optimaalOntwerp == null) {
+            System.out.println("Geen optimaal ontwerp gevonden bij de gegeven beschikbaarheid, of er is een fout opgetreden!");
+        }
     }
-    private static void findCheapestInfrastructure(int firewallsUsed, int webServersUsed, int dbServersUsed,
-                                                   double totalCost, ArrayList<Component> selectedServers,
-                                                   ArrayList<Component> firewalls, ArrayList<Component> webServers, ArrayList<Component> dbServers,
-                                                   int webServerIndex, int dbServerIndex) {
-        aantalKeer++;
 
-        if (firewallsUsed >= MAX_FIREWALLS && webServersUsed >= MAX_WEB_SERVERS && dbServersUsed >= MAX_DB_SERVERS) {
-            return; // Terminate the loop when every combination is found
-        }
-        if(totalCost > minCost){
+    public void vindOptimaalOntwerp(int aantalFirewalls, int aantalWebservers, int aantalDatabaseservers, double totalCost, ArrayList<Component> geselecteerdeServers, ArrayList<Component> pfsense, ArrayList<Component> webserver, ArrayList<Component> databaseserver, int webServerIndex, int dbServerIndex) {
+
+        if (totalCost > minimaleKosten){
             return;
         }
+        if (aantalFirewalls >= 1 && geselecteerdeServers.size() >= 12) {
+            return;
+        }
+
         // Try adding a firewall
-        if (firewallsUsed < MAX_FIREWALLS) {
-            for (Component firewall : firewalls) {
-                selectedServers.add(firewall);
-                findCheapestInfrastructure(firewallsUsed + 1, webServersUsed, dbServersUsed,
-                        totalCost + firewall.getKosten(), selectedServers, firewalls, webServers, dbServers,
-                        webServerIndex, dbServerIndex);
-                selectedServers.remove(selectedServers.size() - 1); // Backtrack by removing the last added firewall
+        if (aantalFirewalls < 1) {
+            for (Component firewall : pfsense) {
+                geselecteerdeServers.add(firewall);
+                vindOptimaalOntwerp(aantalFirewalls + 1, aantalWebservers, aantalDatabaseservers, totalCost + firewall.getKosten(), geselecteerdeServers, pfsense, webserver, databaseserver, webServerIndex, dbServerIndex);
+                geselecteerdeServers.remove(geselecteerdeServers.size() - 1); // Backtrack by removing the last added firewall
             }
         }
 
         // Try adding a web server
-        if (webServersUsed < MAX_WEB_SERVERS) {
-            for (int i = webServerIndex; i < webServers.size(); i++) {
-                Component webServer = webServers.get(i);
-                selectedServers.add(webServer);
-                findCheapestInfrastructure(firewallsUsed, webServersUsed + 1, dbServersUsed,
-                        totalCost + webServer.getKosten(), selectedServers, firewalls, webServers, dbServers,
-                        i, dbServerIndex);
-                selectedServers.remove(selectedServers.size() - 1); // Backtrack by removing the last added web server
+        if (geselecteerdeServers.size() < 12) {
+            for (int i = webServerIndex; i < webserver.size(); i++) {
+                Component webServer = webserver.get(i);
+                geselecteerdeServers.add(webServer);
+                vindOptimaalOntwerp(aantalFirewalls, aantalWebservers + 1, aantalDatabaseservers, totalCost + webServer.getKosten(), geselecteerdeServers, pfsense, webserver, databaseserver, i, dbServerIndex);
+                geselecteerdeServers.remove(geselecteerdeServers.size() - 1); // Backtrack by removing the last added web server
             }
         }
 
         // Try adding a database server
-        if (dbServersUsed < MAX_DB_SERVERS) {
-            for (int i = dbServerIndex; i < dbServers.size(); i++) {
-                Component dbServer = dbServers.get(i);
-                selectedServers.add(dbServer);
-                findCheapestInfrastructure(firewallsUsed, webServersUsed, dbServersUsed + 1,
-                        totalCost + dbServer.getKosten(), selectedServers, firewalls, webServers, dbServers,
-                        webServerIndex, i);
-                selectedServers.remove(selectedServers.size() - 1); // Backtrack by removing the last added database server
+        if (geselecteerdeServers.size() < 12) {
+            for (int i = dbServerIndex; i < databaseserver.size(); i++) {
+                Component dbServer = databaseserver.get(i);
+                geselecteerdeServers.add(dbServer);
+                vindOptimaalOntwerp(aantalFirewalls, aantalWebservers, aantalDatabaseservers + 1, totalCost + dbServer.getKosten(), geselecteerdeServers, pfsense, webserver, databaseserver, webServerIndex, i);
+                geselecteerdeServers.remove(geselecteerdeServers.size() - 1); // Backtrack by removing the last added database server
             }
         }
 
         // Check for valid solution
-        if (firewallsUsed > 0 && webServersUsed > 0 && dbServersUsed > 0
-                && calculateTotalAvailability(selectedServers) >= totalAvailabilityPercentage
-                && totalCost <= maximumCost) {
-            if (totalCost < minCost) {
-                minCost = totalCost;
-                optimalInfrastructure = new ArrayList<>(selectedServers);
+        if (aantalFirewalls > 0 && aantalWebservers > 0 && aantalDatabaseservers > 0
+                && berekenBeschikbaarheid(geselecteerdeServers) >= totaalBeschikbaarheidsPercentage
+                && totalCost <= maximaleKosten) {
+            if (totalCost < minimaleKosten) {
+                minimaleKosten = totalCost;
+                optimaalOntwerp = new ArrayList<>(geselecteerdeServers);
             }
         }
     }
 
-    public static double calculateTotalAvailability(ArrayList<Component> selectedServers){
-        double fwp = 1;
-        double wsp = 1;
-        double dsp = 1;
+    public double berekenBeschikbaarheid(ArrayList<Component> selectedServers) {
+        // Zet variabalen op 0 en 1
+        double totaalPercentage = 0;
+        double beschikbaarheidPfsense = 1;
+        double beschikbaarheidWeb = 1;
+        double beschikbaarheidDatabase = 1;
 
-
-
+        // Loop door de componenten heen en bereken voor elk ComponentType apart de beschikbaarheid
         for (Component component : selectedServers) {
-            double percent = component.getBeschikbaarheid()/100;
-            if(component.getType() == ComponentType.WEBSERVER){
-                if(wsp == 1){
-                    wsp = (1-percent);
-                }else{
-                    wsp *=(1-percent);
-                }
+            if (component.getType() == ComponentType.PFSENSE) {
+                beschikbaarheidPfsense *= (1 - (component.getBeschikbaarheid() / 100));
             }
-            if(component.getType() == ComponentType.DATABASESERVER){
-                if(dsp == 1){
-                    dsp = (1-percent);
-                }else{
-                    dsp *=(1-percent);
-                }
+            if (component.getType() == ComponentType.WEBSERVER) {
+                beschikbaarheidWeb *= (1 - (component.getBeschikbaarheid() / 100));
             }
-            if(component.getType() == ComponentType.PFSENSE){
-                if(fwp == 1){
-                    fwp = (1-percent);
-                }else{
-                    fwp *=(1-percent);
-                }
+            if (component.getType() == ComponentType.DATABASESERVER) {
+                beschikbaarheidDatabase *= (1 - (component.getBeschikbaarheid() / 100));
             }
         }
-        fwp = 1-fwp;
-        wsp = 1-wsp;
-        dsp = 1-dsp;
-        if(fwp != 1 || dsp != 1 || wsp != 1){
-            return (fwp * dsp * wsp);
-        }else{
-            return 0;
-        }
+        // Herschrijf de beschikbaarheid om het op te kunnen tellen
+        beschikbaarheidPfsense = 1 - beschikbaarheidPfsense;
+        beschikbaarheidWeb = 1 - beschikbaarheidWeb;
+        beschikbaarheidDatabase = 1 - beschikbaarheidDatabase;
+
+        // Berekenen totaalpercentage
+        totaalPercentage = (beschikbaarheidPfsense * beschikbaarheidWeb * beschikbaarheidDatabase);
+        return totaalPercentage;
     }
 
-    public static double getMinCost() {
-        return minCost;
-    }
-
-    public static double getTotalAvailabilityPercentage() {
-        return totalAvailabilityPercentage;
-    }
-
-    public ArrayList<Component> getCatalogusComponenten() {
-        return CatalogusComponenten;
+    public double getTotaalKosten() {
+        return minimaleKosten;
     }
 }
