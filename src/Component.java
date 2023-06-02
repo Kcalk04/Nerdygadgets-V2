@@ -51,4 +51,14 @@ public class Component {
             return new ImageIcon(rootPath + "/src/img/placeholder.jpg");
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Component component = (Component) obj;
+        if(component.getNaam().equals(this.getNaam())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

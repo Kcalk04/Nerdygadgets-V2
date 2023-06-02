@@ -1,3 +1,5 @@
+import jdk.jfr.Category;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -12,26 +14,28 @@ public class TabelOptimalisatie  extends JDialog implements ActionListener{
         super(parent, "Nieuw component toevoegen", true);
         optDisplay = new JTable();
 
-        // Create table data
-        Object[][] data = {
-                {"PFsense"},
-                {"pfsense", 99.998 + "%" ,"€" + 4000.00},
-                {},
-                {"Web"},
-                {"HAL9001W", 80.0 + "%" ,"€" + 2200.00},
-                {"HAL9002W", 90.0 + "%" ,"€" + 3200.00},
-                {"HAL9003W", 95.0 + "%" ,"€" + 5100.00},
-                {},
-                {"Databases"},
-                {"HAL9001DB", 90 + "%" ,"€" + 5100.00},
-                {"HAL9002DB", 95 + "%" ,"€" + 7700.00},
-                {"HAL9003DB", 98 + "%" ,"€" + 12200.00},
-        };
+
+        // Create a DefaultTableModel with the data and column names
+        BackTrackingAlg backTrackingAlg = new BackTrackingAlg();
+        int[][] aantallen = backTrackingAlg.getAantal();
 
         // Create table column names
         String[] columnNames = {"Machine", "Beschikbaarheid", "Prijs", "Aantal"};
 
-        // Create a DefaultTableModel with the data and column names
+        // Create table data
+        Object[][] data = new Object[SimulatieFrame.catalogusPanel.catalogusComponenten.size()][columnNames.length];
+
+        for (int i = 0; i < aantallen.length-1; i++) {
+            data[i][0] = SimulatieFrame.catalogusPanel.catalogusComponenten.get(i).getNaam();
+            data[i][1] = SimulatieFrame.catalogusPanel.catalogusComponenten.get(i).getBeschikbaarheid();
+            data[i][2] = SimulatieFrame.catalogusPanel.catalogusComponenten.get(i).getKosten() * aantallen[i][0];
+            data[i][3] = aantallen[i][0];
+        }
+
+//        for (int i = 0; i < data.length; i++) {
+//            data[i][5] = backTrackingAlg[i]
+//        }
+
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
         // Create the JTable with the DefaultTableModel
