@@ -40,8 +40,7 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     public void optimalisatieTabel() {
         // Create the dialog
         JFrame frame = new JFrame();
-        TabelOptimalisatie Table = new TabelOptimalisatie(frame);
-       // backTrackingAlg backTrack = new backTrackingAlg();
+        TabelOptimalisatie Table = new TabelOptimalisatie(frame, sizeTextField.getText());
         // Wait for the dialog to close
         Table.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }

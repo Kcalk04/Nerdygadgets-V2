@@ -1,3 +1,5 @@
+import jdk.jfr.Category;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -5,33 +7,40 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 public class TabelOptimalisatie  extends JDialog implements ActionListener{
     public JTable optDisplay;
-    public TabelOptimalisatie(JFrame parent){
+    public TabelOptimalisatie(JFrame parent, String beschikbaarheidString){
         super(parent, "Nieuw component toevoegen", true);
         optDisplay = new JTable();
 
-        // Create table data
-        Object[][] data = {
-                {"PFsense"},
-                {"pfsense", 99.998 + "%" ,"€" + 4000.00},
-                {},
-                {"Web"},
-                {"HAL9001W", 80.0 + "%" ,"€" + 2200.00},
-                {"HAL9002W", 90.0 + "%" ,"€" + 3200.00},
-                {"HAL9003W", 95.0 + "%" ,"€" + 5100.00},
-                {},
-                {"Databases"},
-                {"HAL9001DB", 90 + "%" ,"€" + 5100.00},
-                {"HAL9002DB", 95 + "%" ,"€" + 7700.00},
-                {"HAL9003DB", 98 + "%" ,"€" + 12200.00},
-        };
+//        double beschikbaarheid = Double.parseDouble(beschikbaarheidString);
+
+//        ServerInfrastructure serverInfrastructure = new ServerInfrastructure(beschikbaarheid, 100000);
+//        System.out.println(serverInfrastructure.findCheapestInfrastructure(0, 0, 0, 0).size());
+
+        ArrayList<Component> selectedServers = SimulatieFrame.catalogusPanel.catalogusComponenten;
+
+        // Create a DefaultTableModel with the data and column names
+        BackTrackingAlg backTrackingAlg = new BackTrackingAlg();
+        int[][] aantallen = backTrackingAlg.getAantal(selectedServers);
 
         // Create table column names
         String[] columnNames = {"Machine", "Beschikbaarheid", "Prijs", "Aantal"};
 
-        // Create a DefaultTableModel with the data and column names
+        // Create table data
+        Object[][] data = new Object[selectedServers.size()][columnNames.length];
+        System.out.println(selectedServers.size());
+        System.out.println(aantallen.length);
+
+        for (int i = 0; i < SimulatieFrame.catalogusPanel.catalogusComponenten.size()-1; i++) {
+            data[i][0] = selectedServers.get(i).getNaam();
+            data[i][1] = selectedServers.get(i).getBeschikbaarheid();
+            data[i][2] = selectedServers.get(i).getKosten() * aantallen[i][0];
+            data[i][3] = aantallen[i][0];
+        }
+
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
 
         // Create the JTable with the DefaultTableModel
