@@ -13,7 +13,7 @@ public class ServerStatusService {
         return createServerStatus(statusString);
     }
 
-    ServerStatus createServerStatus(String statusString) {
+    public ServerStatus createServerStatus(String statusString) {
         ServerStatus serverStatus = new ServerStatus();
         String[] substrings = statusString.replaceAll(" +", " ").split("\n");
         if (substrings.length < 3) {
@@ -21,13 +21,28 @@ public class ServerStatusService {
             return null;
         }
         String[] cpuSubString = substrings[0].split(" ");
-        serverStatus.cpuUsage = cpuSubString[2];
+        serverStatus.setCpuUsage(cpuSubString[2]);
         String[] diskSubString = substrings[2].split(" ");
-        serverStatus.diskUsage = Integer.parseInt(diskSubString[2].replaceAll("%", ""));
+        serverStatus.setDiskUsage(Integer.parseInt(diskSubString[2].replaceAll("%", "")));
         var upTimeSubs = substrings[1].split(": ");
-        serverStatus.upTime = upTimeSubs[1];
+        serverStatus.setUpTime(upTimeSubs[1]);
         return serverStatus;
     }
+//    ServerStatus createServerStatus(String statusString) {
+//        ServerStatus serverStatus = new ServerStatus();
+//        String[] substrings = statusString.replaceAll(" +", " ").split("\n");
+//        if (substrings.length < 3) {
+//            System.err.println("Not enough data from status server");
+//            return null;
+//        }
+//        String[] cpuSubString = substrings[0].split(" ");
+//        serverStatus.cpuUsage = cpuSubString[2];
+//        String[] diskSubString = substrings[2].split(" ");
+//        serverStatus.diskUsage = Integer.parseInt(diskSubString[2].replaceAll("%", ""));
+//        var upTimeSubs = substrings[1].split(": ");
+//        serverStatus.upTime = upTimeSubs[1];
+//        return serverStatus;
+//    }
 
     private static String getStatusString(String url) {
         HttpClient client = HttpClient.newHttpClient();

@@ -26,18 +26,36 @@ public class MonitoringTable extends AbstractTableModel {
             ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
             if (serverStatus == null) {
                 rowData[i][2] = "Unavailable";
-                rowData[i][3] = "-";
-                rowData[i][4] = "-";
-                rowData[i][5] = "-";
+                rowData[i][3] = "";
+                rowData[i][4] = "";
+                rowData[i][5] = "";
                 continue;
             }
-            System.out.println(serverStatus);
             rowData[i][2] = "Active";
             rowData[i][3] = serverStatus.upTime;
             rowData[i][4] = serverStatus.cpuUsage;
             rowData[i][5] = "" + serverStatus.diskUsage + "%";
         }
     }
+
+//    public void getServerStatusi() {
+//        ServerStatusService serverStatusService = new ServerStatusService();
+//        for (int i = 0; i < rowData.length; i++) {
+//            ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
+//            if (serverStatus == null) {
+//                rowData[i][2] = "Unavailable";
+//                rowData[i][3] = "-";
+//                rowData[i][4] = "-";
+//                rowData[i][5] = "-";
+//                continue;
+//            }
+//            System.out.println(serverStatus);
+//            rowData[i][2] = "Active";
+//            rowData[i][3] = serverStatus.upTime;
+//            rowData[i][4] = serverStatus.cpuUsage;
+//            rowData[i][5] = "" + serverStatus.diskUsage + "%";
+//        }
+//    }
 
     @Override
     public String getColumnName(int column) {
