@@ -88,7 +88,6 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
         if (e.getSource() == jmiToevoegen) {
             Component voorbeeldComponent = catalogusComponenten.get(geselecteerdComponentID);
             Component component = new Component(voorbeeldComponent.getNaam(), voorbeeldComponent.getKosten(), voorbeeldComponent.getBeschikbaarheid(), voorbeeldComponent.getType());
-
             SimulatieFrame.visualisatiePanel.voegComponentToe(component);
             repaint();
         } else if (e.getSource() == jmiVerwijderen) {
@@ -99,6 +98,9 @@ public class CatalogusPanel extends Panel implements ActionListener, MouseListen
 
     public void mousePressed(MouseEvent e) {
         if (SwingUtilities.isLeftMouseButton(e)) {
+            if(componenten.size() > 12) {
+                jmiToevoegen.setEnabled(false);
+            }
             // Maak de popup menu aan
             JPopupMenu popupMenu = new JPopupMenu();
             jmiToevoegen = new JMenuItem("Toevoegen");

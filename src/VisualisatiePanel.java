@@ -31,14 +31,18 @@ import java.util.ArrayList;
 
         public void voegComponentToe(Component component) {
             // Toevoegen componenten
-            componenten.add(component);
-            tekenVisualisatiePanel();
+            if(componenten.size() < 12) {
+                componenten.add(component);
+                tekenVisualisatiePanel();
 
-            // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
-            berekenKosten();
-            berekenBeschikbaarheid();
-            berekenAantal();
-            SimulatieFrame.overviewPanel.tekenOverviewPanel();
+                // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
+                berekenKosten();
+                berekenBeschikbaarheid();
+                berekenAantal();
+                SimulatieFrame.overviewPanel.tekenOverviewPanel();
+            } else {
+                System.out.println("Maximaal aantal componenten van 12 bereikt");
+            }
         }
 
 
@@ -194,6 +198,7 @@ import java.util.ArrayList;
 
                             componenten.clear();
                             clearAlleWaardes();
+                            removeAll();
                             SimulatieFrame.overviewPanel.tekenOverviewPanel();
                         }
                     }
