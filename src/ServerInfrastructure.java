@@ -67,7 +67,7 @@ class ServerInfrastructure {
             int totaalPercentage2 = (int) (totaalPercentage * 1000);
 
             if (totalCost > minCost || beschikbaarheid2 > totaalPercentage2) {
-                System.out.println(selectedServers.size());
+                System.out.println("servers" + selectedServers.size());
                 ArrayList<Component> nieuweServers = new ArrayList<>();
                 for (Component component : selectedServers) {
                     nieuweServers.add(component);

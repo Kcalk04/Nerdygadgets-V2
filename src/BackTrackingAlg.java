@@ -1,10 +1,9 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class BackTrackingAlg {
 
-    public int[][] getAantal() {
+    public int[][] getAantal(ArrayList<Component> selectedServers) {
         List<Component> catComponenten = SimulatieFrame.catalogusPanel.catalogusComponenten;
 
         catComponenten.add(SimulatieFrame.catalogusPanel.catalogusComponenten.get(0));
