@@ -33,7 +33,6 @@ class Algoritme {
         Component apacheServer2 = new Component("HAL9002W", 3200, 90, ComponentType.WEBSERVER);
         Component apacheServer3 = new Component("HAL9003W", 5100, 95, ComponentType.WEBSERVER);
 
-
         // Het toevoegen van de componenten aan de catelogus
         CatalogusComponenten.add(pfsense);
         CatalogusComponenten.add(apacheServer1);
@@ -71,7 +70,6 @@ class Algoritme {
             return;
         }
 
-        // Try adding a firewall
         if (aantalFirewalls < 1) {
             for (Component firewall : pfsense) {
                 geselecteerdeServers.add(firewall);
@@ -80,7 +78,6 @@ class Algoritme {
             }
         }
 
-        // Try adding a web server
         if (geselecteerdeServers.size() < 12) {
             for (int i = webServerIndex; i < webserver.size(); i++) {
                 Component webServer = webserver.get(i);
@@ -90,7 +87,6 @@ class Algoritme {
             }
         }
 
-        // Try adding a database server
         if (geselecteerdeServers.size() < 12) {
             for (int i = dbServerIndex; i < databaseserver.size(); i++) {
                 Component dbServer = databaseserver.get(i);
@@ -100,7 +96,6 @@ class Algoritme {
             }
         }
 
-        // Check for valid solution
         if (aantalFirewalls > 0 && aantalWebservers > 0 && aantalDatabaseservers > 0
                 && berekenBeschikbaarheid(geselecteerdeServers) >= totaalBeschikbaarheidsPercentage
                 && totalCost <= maximaleKosten) {

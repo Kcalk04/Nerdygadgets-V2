@@ -32,6 +32,10 @@ public class OptimalisatieDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == Bereken) {
             inputBeschikbaarheid = Double.parseDouble(jtfBeschikbaarheidInput.getText());
+            if (inputBeschikbaarheid >= 100 || inputBeschikbaarheid <= 0) {
+                System.out.println("Ongeldige input, moet tussen 1 - 100");
+                return;
+            }
             optimalisatieTabel();
             dispose();
         }
