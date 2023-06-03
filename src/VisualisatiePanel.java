@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
     public class VisualisatiePanel extends Panel implements ActionListener, MouseListener {
+        private Algoritme algoritme;
         double totaleKosten = 0.0;
         private ArrayList<Component> componenten;
         public JMenuItem jmiVerwijderen;
@@ -29,16 +30,30 @@ import java.util.ArrayList;
             setLayout(new GridLayout(5, 2));
         }
 
+        public void transferDataFromOptimaalOntwerp(ArrayList<Component> optimaalOntwerp) {
+            componenten.clear(); // Clear the existing components
+
+            for (Component component : optimaalOntwerp) {
+                componenten.add(component); // Add each component from optimaalOntwerp to componenten
+            }
+        }
+
+
+
         public void voegComponentToe(Component component) {
             // Toevoegen componenten
-            componenten.add(component);
-            tekenVisualisatiePanel();
+            if(componenten.size() < 12) {
+                componenten.add(component);
+                tekenVisualisatiePanel();
 
-            // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
-            berekenKosten();
-            berekenBeschikbaarheid();
-            berekenAantal();
-            SimulatieFrame.overviewPanel.tekenOverviewPanel();
+                // Aanroepen methodes om bij het toevoegen van elk component de gegevens te updaten
+                berekenKosten();
+                berekenBeschikbaarheid();
+                berekenAantal();
+                SimulatieFrame.overviewPanel.tekenOverviewPanel();
+            } else {
+                System.out.println("Maximaal aantal componenten van 12 bereikt");
+            }
         }
 
 
@@ -194,6 +209,7 @@ import java.util.ArrayList;
 
                             componenten.clear();
                             clearAlleWaardes();
+                            removeAll();
                             SimulatieFrame.overviewPanel.tekenOverviewPanel();
                         }
                     }

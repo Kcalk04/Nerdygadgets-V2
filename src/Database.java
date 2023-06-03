@@ -21,6 +21,8 @@ public class Database {
                 statement.setString(4, type);
 
                 statement.executeUpdate();
+                haalComponentenOp(SimulatieFrame.catalogusPanel.catalogusComponenten);
+                SimulatieFrame.visualisatiePanel.repaint();
             }
         } catch (SQLException e) {
             System.out.println("Error bij opslaan data: " + e.getMessage());
@@ -51,6 +53,8 @@ public class Database {
                     Component component = new Component(naam, prijs, beschikbaarheid, type);
                     catalogusComponenten.add(component);
                 }
+                haalComponentenOp(SimulatieFrame.catalogusPanel.catalogusComponenten);
+                SimulatieFrame.visualisatiePanel.repaint();
             }
         } catch (SQLException e) {
             System.out.println("Error retrieving data: " + e.getMessage());

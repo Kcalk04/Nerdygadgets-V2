@@ -6,6 +6,7 @@ public class Component {
     private double kosten;
     private double beschikbaarheid;
     private ComponentType type;
+    private double aantal;
 
     public Component(String naam, double kosten, double beschikbaarheid, ComponentType type) {
         this.naam = naam;
@@ -29,6 +30,14 @@ public class Component {
 
     public double getBeschikbaarheid() {
         return beschikbaarheid;
+    }
+
+    public double setAantal(double aantal) {
+        return this.aantal;
+    }
+
+    public double getAantal() {
+        return  aantal;
     }
 
     public ComponentType getType() {

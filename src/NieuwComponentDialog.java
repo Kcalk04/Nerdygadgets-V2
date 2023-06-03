@@ -56,9 +56,12 @@ public class NieuwComponentDialog extends JDialog {
                 String type = typeComponent;
 
                 Database.insertData(naam, prijs, beschikbaarheid, type);
+                Database.haalComponentenOp(SimulatieFrame.catalogusPanel.catalogusComponenten);
+                SimulatieFrame.visualisatiePanel.repaint();
 
                 int input = JOptionPane.showOptionDialog(null, "Component toegevoegd!", "Succes!", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new Object[] {"Ok"}, "Ok");
                 if(input == JOptionPane.YES_OPTION) {
+                    SimulatieFrame.catalogusPanel.repaint();
                     dispose();
                 }
             }
