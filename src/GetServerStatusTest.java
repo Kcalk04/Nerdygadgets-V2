@@ -1,9 +1,8 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetServerStatusTest {
-
     @org.junit.jupiter.api.Test
-    void createServerStatus() {
+    void createServerStatus() throws Exception {
         var statusGetter = new ServerStatusService();
         var status = statusGetter.createServerStatus("CPU Usage: 19,4%\n" +
                 "Uptime: up 19 hours, 43 minutes\n" +
@@ -14,7 +13,7 @@ class GetServerStatusTest {
         assertEquals("up 19 hours, 43 minutes", status.getUpTime());
     }
     @org.junit.jupiter.api.Test
-    void createServerStatus_otherData() {
+    void createServerStatus_otherData() throws Exception {
         var statusGetter = new ServerStatusService();
         var status = statusGetter.createServerStatus("CPU Usage: 23.8%\n" +
                 "Uptime: up 50 hours, 43 minutes\n" +

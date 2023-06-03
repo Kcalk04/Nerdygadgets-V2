@@ -10,7 +10,7 @@ public class MonitoringTable extends AbstractTableModel {
             {"databaseserver", "DB-2", "Unknown", "", "", "", "http://192.168.1.109/Indexer.php"},
             {"webserver", "HTTP-1", "Unknown", "", "", "", "http://192.168.1.104/Indexer.php"},
             {"webserver", "HTTP-2", "Unknown", "", "", "", "http://192.168.1.105/Indexer.php"},
-            {"pfsense", "pfSense-LB", "Unknown", "", "", "", "http://145.44.235.112/Indexer.php"}
+            {"pfsense", "pfSense-LB", "Unknown", "", "", "", "https://192.168.1.1/nerdygadgets-V2-status/Indexer.php"}
     };
 
     private static final Map<String, ImageIcon> IMAGES = new HashMap<>();

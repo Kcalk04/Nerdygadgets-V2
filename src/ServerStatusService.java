@@ -1,11 +1,37 @@
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Properties;
 
 public class ServerStatusService {
+    private static SSLContext sslContext;
+    static {
+        try {
+            final Properties props = System.getProperties();
+            props.setProperty("jdk.internal.httpclient.disableHostnameVerification", Boolean.TRUE.toString());
+            sslContext = setupSloppySSLConext();
+        } catch (Exception e) {
+            System.err.println(TimeService.timeStamp() + " Exception: " + e.getMessage());
+            e.printStackTrace();
+            sslContext = null;
+        }
+    }
+
+    static SSLContext setupSloppySSLConext() throws NoSuchAlgorithmException, KeyManagementException {
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, trustAllCerts, new SecureRandom());
+        return sslContext;
+    }
+
     public ServerStatus getStatus(String url) {
         var statusString = getStatusString(url);
         if (statusString == null){
@@ -30,8 +56,9 @@ public class ServerStatusService {
         return serverStatus;
     }
 
-    private static String getStatusString(String url) {
+    private String getStatusString(String url) {
         HttpClient client = HttpClient.newBuilder()
+                .sslContext(sslContext)
                 .connectTimeout(Duration.ofSeconds(2))
                 .build();
         HttpRequest request = HttpRequest.newBuilder()
@@ -53,4 +80,18 @@ public class ServerStatusService {
             return null;
         }
     }
+
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+    };
 }
