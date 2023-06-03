@@ -1,7 +1,7 @@
 public class ServerStatus {
-    String cpuUsage;
-    int diskUsage;
-    String upTime;
+    private String cpuUsage;
+    private int diskUsage;
+    private String upTime;
     public String getCpuUsage() {
         return cpuUsage;
     }

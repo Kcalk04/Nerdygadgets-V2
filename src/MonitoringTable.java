@@ -21,41 +21,26 @@ public class MonitoringTable extends AbstractTableModel {
     }
 
     public void getServerStatusi() {
-        ServerStatusService serverStatusService = new ServerStatusService();
-        for (int i = 0; i < rowData.length; i++) {
-            ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
-            if (serverStatus == null) {
-                rowData[i][2] = "Unavailable";
-                rowData[i][3] = "";
-                rowData[i][4] = "";
-                rowData[i][5] = "";
-                continue;
+        //synchronized betekend dat beide threads of control aan deze rowData mogen werken
+        synchronized (rowData) {
+            ServerStatusService serverStatusService = new ServerStatusService();
+            for (int i = 0; i < rowData.length; i++) {
+                System.out.println(TimeService.timeStamp() + " getting status of: " + rowData[i][1]);
+                ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
+                if (serverStatus == null) {
+                    rowData[i][2] = "Unavailable";
+                    rowData[i][3] = "-";
+                    rowData[i][4] = "-";
+                    rowData[i][5] = "-";
+                    continue;
+                }
+                rowData[i][2] = "Active";
+                rowData[i][3] = serverStatus.getUpTime();
+                rowData[i][4] = serverStatus.getCpuUsage();
+                rowData[i][5] = "" + serverStatus.getDiskUsage() + "%";
             }
-            rowData[i][2] = "Active";
-            rowData[i][3] = serverStatus.upTime;
-            rowData[i][4] = serverStatus.cpuUsage;
-            rowData[i][5] = "" + serverStatus.diskUsage + "%";
         }
     }
-
-//    public void getServerStatusi() {
-//        ServerStatusService serverStatusService = new ServerStatusService();
-//        for (int i = 0; i < rowData.length; i++) {
-//            ServerStatus serverStatus = serverStatusService.getStatus((String) rowData[i][6]);
-//            if (serverStatus == null) {
-//                rowData[i][2] = "Unavailable";
-//                rowData[i][3] = "-";
-//                rowData[i][4] = "-";
-//                rowData[i][5] = "-";
-//                continue;
-//            }
-//            System.out.println(serverStatus);
-//            rowData[i][2] = "Active";
-//            rowData[i][3] = serverStatus.upTime;
-//            rowData[i][4] = serverStatus.cpuUsage;
-//            rowData[i][5] = "" + serverStatus.diskUsage + "%";
-//        }
-//    }
 
     @Override
     public String getColumnName(int column) {
@@ -87,9 +72,11 @@ public class MonitoringTable extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex == 0) {
-            return IMAGES.get(rowData[rowIndex][columnIndex]);
+        synchronized (rowData) {
+            if (columnIndex == 0) {
+                return IMAGES.get(rowData[rowIndex][columnIndex]);
+            }
+            return rowData[rowIndex][columnIndex];
         }
-        return rowData[rowIndex][columnIndex];
     }
 }

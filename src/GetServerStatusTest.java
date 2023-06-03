@@ -9,9 +9,9 @@ class GetServerStatusTest {
                 "Uptime: up 19 hours, 43 minutes\n" +
                 "disk usage:  37%\n" +
                 "<script>");
-        assertEquals("19,4%", status.cpuUsage);
-        assertEquals(37, status.diskUsage);
-        assertEquals("Uptime: up 19 hours, 43 minutes", status.upTime);
+        assertEquals("19,4%", status.getCpuUsage());
+        assertEquals(37, status.getDiskUsage());
+        assertEquals("up 19 hours, 43 minutes", status.getUpTime());
     }
     @org.junit.jupiter.api.Test
     void createServerStatus_otherData() {
@@ -20,8 +20,8 @@ class GetServerStatusTest {
                 "Uptime: up 50 hours, 43 minutes\n" +
                 "disk usage:  99%\n" +
                 "<script>");
-        assertEquals("23.8%", status.cpuUsage);
-        assertEquals(99, status.diskUsage);
-        assertEquals("Uptime: up 50 hours, 43 minutes", status.upTime);
+        assertEquals("23.8%", status.getCpuUsage());
+        assertEquals(99, status.getDiskUsage());
+        assertEquals("up 50 hours, 43 minutes", status.getUpTime());
     }
 }
